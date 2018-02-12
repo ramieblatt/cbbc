@@ -10,12 +10,71 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180212052107) do
+ActiveRecord::Schema.define(version: 20180212182641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "AllstarFull", primary_key: ["playerID", "yearID", "gameNum"], force: :cascade do |t|
+  create_table "batting_stats", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "year_id", null: false
+    t.integer "stint", null: false
+    t.string "team_code", null: false
+    t.string "league_code", null: false
+    t.integer "num_g"
+    t.integer "num_ab"
+    t.integer "num_r"
+    t.integer "num_h"
+    t.integer "num_2b"
+    t.integer "num_3b"
+    t.integer "num_hr"
+    t.integer "num_rbi"
+    t.integer "num_sb"
+    t.integer "num_cs"
+    t.integer "num_bb"
+    t.integer "num_so"
+    t.integer "num_ibb"
+    t.integer "num_hbp"
+    t.integer "num_sh"
+    t.integer "num_sf"
+    t.integer "num_gidp"
+    t.string "lahman_player_id", null: false
+    t.index ["lahman_player_id"], name: "index_batting_stats_on_lahman_player_id"
+    t.index ["league_code"], name: "index_batting_stats_on_league_code"
+    t.index ["stint"], name: "index_batting_stats_on_stint"
+    t.index ["team_code"], name: "index_batting_stats_on_team_code"
+    t.index ["year_id"], name: "index_batting_stats_on_year_id"
+  end
+
+  create_table "fielding_stats", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "year_id", null: false
+    t.integer "stint", null: false
+    t.string "team_code", null: false
+    t.string "league_code", null: false
+    t.string "position_code", null: false
+    t.integer "num_g"
+    t.integer "num_gs"
+    t.integer "num_innouts"
+    t.integer "num_po"
+    t.integer "num_a"
+    t.integer "num_e"
+    t.integer "num_dp"
+    t.integer "num_pb"
+    t.integer "num_wp"
+    t.integer "num_sb"
+    t.integer "num_cs"
+    t.integer "zr"
+    t.string "lahman_player_id", null: false
+    t.index ["lahman_player_id"], name: "index_fielding_stats_on_lahman_player_id"
+    t.index ["league_code"], name: "index_fielding_stats_on_league_code"
+    t.index ["position_code"], name: "index_fielding_stats_on_position_code"
+    t.index ["stint"], name: "index_fielding_stats_on_stint"
+    t.index ["team_code"], name: "index_fielding_stats_on_team_code"
+    t.index ["year_id"], name: "index_fielding_stats_on_year_id"
+  end
+
+  create_table "legacy_all_star_full", primary_key: ["playerID", "yearID", "gameNum"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.integer "gameNum", null: false
@@ -29,7 +88,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "AllstarFull_teamID_idx"
   end
 
-  create_table "Appearances", primary_key: ["yearID", "teamID", "playerID"], force: :cascade do |t|
+  create_table "legacy_appearances", primary_key: ["yearID", "teamID", "playerID"], force: :cascade do |t|
     t.integer "yearID", null: false
     t.string "teamID", limit: 6, null: false
     t.string "lgID", limit: 4
@@ -54,7 +113,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["lgID"], name: "Appearances_lgID_idx"
   end
 
-  create_table "AwardsManagers", primary_key: ["yearID", "awardID", "lgID", "playerID"], force: :cascade do |t|
+  create_table "legacy_awards_managers", primary_key: ["yearID", "awardID", "lgID", "playerID"], force: :cascade do |t|
     t.string "playerID", limit: 20, null: false
     t.string "awardID", limit: 150, null: false
     t.integer "yearID", null: false
@@ -63,7 +122,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.string "notes", limit: 200
   end
 
-  create_table "AwardsPlayers", primary_key: ["yearID", "awardID", "lgID", "playerID"], force: :cascade do |t|
+  create_table "legacy_awards_players", primary_key: ["yearID", "awardID", "lgID", "playerID"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.string "awardID", limit: 510, null: false
     t.integer "yearID", null: false
@@ -72,7 +131,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.string "notes", limit: 200
   end
 
-  create_table "AwardsShareManagers", primary_key: ["awardID", "yearID", "lgID", "playerID"], force: :cascade do |t|
+  create_table "legacy_awards_share_managers", primary_key: ["awardID", "yearID", "lgID", "playerID"], force: :cascade do |t|
     t.string "awardID", limit: 50, null: false
     t.integer "yearID", null: false
     t.string "lgID", limit: 4, null: false
@@ -82,7 +141,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.integer "votesFirst"
   end
 
-  create_table "AwardsSharePlayers", primary_key: ["awardID", "yearID", "lgID", "playerID"], force: :cascade do |t|
+  create_table "legacy_awards_share_players", primary_key: ["awardID", "yearID", "lgID", "playerID"], force: :cascade do |t|
     t.string "awardID", limit: 50, null: false
     t.integer "yearID", null: false
     t.string "lgID", limit: 4, null: false
@@ -92,7 +151,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.float "votesFirst"
   end
 
-  create_table "Batting", primary_key: ["playerID", "yearID", "stint"], force: :cascade do |t|
+  create_table "legacy_batting", primary_key: ["playerID", "yearID", "stint"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.integer "stint", null: false
@@ -121,7 +180,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "Batting_teamID_idx"
   end
 
-  create_table "BattingPost", primary_key: ["yearID", "round", "playerID"], force: :cascade do |t|
+  create_table "legacy_batting_post", primary_key: ["yearID", "round", "playerID"], force: :cascade do |t|
     t.integer "yearID", null: false
     t.string "round", limit: 20, null: false
     t.string "playerID", limit: 18, null: false
@@ -148,13 +207,13 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "BattingPost_teamID_idx"
   end
 
-  create_table "CollegePlaying", id: false, force: :cascade do |t|
+  create_table "legacy_college_playing", id: false, force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.string "schoolID", limit: 30
     t.integer "yearID"
   end
 
-  create_table "Fielding", primary_key: ["playerID", "yearID", "stint", "POS"], force: :cascade do |t|
+  create_table "legacy_fielding", primary_key: ["playerID", "yearID", "stint", "POS"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.integer "stint", null: false
@@ -177,7 +236,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "Fielding_teamID_idx"
   end
 
-  create_table "FieldingOF", primary_key: ["playerID", "yearID", "stint"], force: :cascade do |t|
+  create_table "legacy_fielding_of", primary_key: ["playerID", "yearID", "stint"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.integer "stint", null: false
@@ -186,7 +245,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.integer "Grf"
   end
 
-  create_table "FieldingOFsplit", primary_key: ["playerID", "yearID", "stint", "POS"], force: :cascade do |t|
+  create_table "legacy_fielding_of_split", primary_key: ["playerID", "yearID", "stint", "POS"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.integer "stint", null: false
@@ -209,7 +268,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "FieldingOFsplit_teamID_idx"
   end
 
-  create_table "FieldingPost", primary_key: ["playerID", "yearID", "round", "POS"], force: :cascade do |t|
+  create_table "legacy_fielding_post", primary_key: ["playerID", "yearID", "round", "POS"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.string "teamID", limit: 6
@@ -231,7 +290,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "FieldingPost_teamID_idx"
   end
 
-  create_table "HallOfFame", primary_key: ["playerID", "yearid", "votedBy"], force: :cascade do |t|
+  create_table "legacy_hall_of_fame", primary_key: ["playerID", "yearid", "votedBy"], force: :cascade do |t|
     t.string "playerID", limit: 20, null: false
     t.integer "yearid", null: false
     t.string "votedBy", limit: 128, null: false
@@ -243,7 +302,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.string "needed_note", limit: 50
   end
 
-  create_table "HomeGames", id: false, force: :cascade do |t|
+  create_table "legacy_home_games", id: false, force: :cascade do |t|
     t.integer "yearkey"
     t.string "leaguekey", limit: 510
     t.string "teamkey", limit: 510
@@ -259,7 +318,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["yearkey"], name: "HomeGames_yearkey_idx"
   end
 
-  create_table "Managers", primary_key: ["yearID", "teamID", "inseason"], force: :cascade do |t|
+  create_table "legacy_managers", primary_key: ["yearID", "teamID", "inseason"], force: :cascade do |t|
     t.string "playerID", limit: 20
     t.integer "yearID", null: false
     t.string "teamID", limit: 6, null: false
@@ -274,7 +333,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["playerID"], name: "Managers_managerID_idx"
   end
 
-  create_table "ManagersHalf", primary_key: ["yearID", "teamID", "playerID", "half"], force: :cascade do |t|
+  create_table "legacy_managers_half", primary_key: ["yearID", "teamID", "playerID", "half"], force: :cascade do |t|
     t.string "playerID", limit: 20, null: false
     t.integer "yearID", null: false
     t.string "teamID", limit: 6, null: false
@@ -288,7 +347,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["lgID"], name: "ManagersHalf_lgID_idx"
   end
 
-  create_table "Parks", primary_key: "ID", id: :serial, force: :cascade do |t|
+  create_table "legacy_parks", primary_key: "ID", id: :integer, default: -> { "nextval('\"Parks_ID_seq\"'::regclass)" }, force: :cascade do |t|
     t.string "parkalias", limit: 510
     t.string "parkkey", limit: 510
     t.string "parkname", limit: 510
@@ -298,7 +357,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["parkkey"], name: "Parks_parkkey_idx"
   end
 
-  create_table "Pitching", primary_key: ["playerID", "yearID", "stint"], force: :cascade do |t|
+  create_table "legacy_pitching", primary_key: ["playerID", "yearID", "stint"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.integer "stint", null: false
@@ -333,7 +392,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "Pitching_teamID_idx"
   end
 
-  create_table "PitchingPost", primary_key: ["playerID", "yearID", "round"], force: :cascade do |t|
+  create_table "legacy_pitching_post", primary_key: ["playerID", "yearID", "round"], force: :cascade do |t|
     t.string "playerID", limit: 18, null: false
     t.integer "yearID", null: false
     t.string "round", limit: 20, null: false
@@ -368,7 +427,35 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["teamID"], name: "PitchingPost_teamID_idx"
   end
 
-  create_table "Salaries", primary_key: ["yearID", "teamID", "lgID", "playerID"], force: :cascade do |t|
+  create_table "legacy_players", primary_key: "playerID", id: :string, limit: 510, force: :cascade do |t|
+    t.integer "birthYear"
+    t.integer "birthMonth"
+    t.integer "birthDay"
+    t.string "birthCountry", limit: 510
+    t.string "birthState", limit: 510
+    t.string "birthCity", limit: 510
+    t.integer "deathYear"
+    t.integer "deathMonth"
+    t.integer "deathDay"
+    t.string "deathCountry", limit: 510
+    t.string "deathState", limit: 510
+    t.string "deathCity", limit: 510
+    t.string "nameFirst", limit: 510
+    t.string "nameLast", limit: 510
+    t.string "nameGiven", limit: 510
+    t.integer "weight"
+    t.integer "height"
+    t.string "bats", limit: 510
+    t.string "throws", limit: 510
+    t.string "debut", limit: 510
+    t.string "finalGame", limit: 510
+    t.string "retroID", limit: 510
+    t.string "bbrefID", limit: 510
+    t.index ["bbrefID"], name: "Master_bbrefID_idx"
+    t.index ["retroID"], name: "Master_retroID_idx"
+  end
+
+  create_table "legacy_salaries", primary_key: ["yearID", "teamID", "lgID", "playerID"], force: :cascade do |t|
     t.integer "yearID", null: false
     t.string "teamID", limit: 6, null: false
     t.string "lgID", limit: 4, null: false
@@ -376,14 +463,14 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.float "salary"
   end
 
-  create_table "Schools", primary_key: "schoolID", id: :string, limit: 30, force: :cascade do |t|
+  create_table "legacy_schools", primary_key: "schoolID", id: :string, limit: 30, force: :cascade do |t|
     t.string "name_full", limit: 510
     t.string "city", limit: 110
     t.string "state", limit: 110
     t.string "country", limit: 110
   end
 
-  create_table "SeriesPost", primary_key: ["yearID", "round"], force: :cascade do |t|
+  create_table "legacy_series_post", primary_key: ["yearID", "round"], force: :cascade do |t|
     t.integer "yearID", null: false
     t.string "round", limit: 10, null: false
     t.string "teamIDwinner", limit: 6
@@ -395,7 +482,7 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.integer "ties"
   end
 
-  create_table "Teams", primary_key: ["yearID", "lgID", "teamID"], force: :cascade do |t|
+  create_table "legacy_teams", primary_key: ["yearID", "lgID", "teamID"], force: :cascade do |t|
     t.integer "yearID", null: false
     t.string "lgID", limit: 4, null: false
     t.string "teamID", limit: 6, null: false
@@ -448,13 +535,13 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["franchID"], name: "Teams_franchID_idx"
   end
 
-  create_table "TeamsFranchises", primary_key: "franchID", id: :string, limit: 6, force: :cascade do |t|
+  create_table "legacy_teams_franchises", primary_key: "franchID", id: :string, limit: 6, force: :cascade do |t|
     t.string "franchName", limit: 100
     t.string "active", limit: 4
     t.string "NAassoc", limit: 6
   end
 
-  create_table "TeamsHalf", primary_key: ["yearID", "teamID", "lgID", "Half"], force: :cascade do |t|
+  create_table "legacy_teams_half", primary_key: ["yearID", "teamID", "lgID", "Half"], force: :cascade do |t|
     t.integer "yearID", null: false
     t.string "lgID", limit: 4, null: false
     t.string "teamID", limit: 6, null: false
@@ -468,32 +555,43 @@ ActiveRecord::Schema.define(version: 20180212052107) do
     t.index ["divID"], name: "TeamsHalf_divID_idx"
   end
 
-  create_table "legacy_players", primary_key: "playerID", id: :string, limit: 510, force: :cascade do |t|
-    t.integer "birthYear"
-    t.integer "birthMonth"
-    t.integer "birthDay"
-    t.string "birthCountry", limit: 510
-    t.string "birthState", limit: 510
-    t.string "birthCity", limit: 510
-    t.integer "deathYear"
-    t.integer "deathMonth"
-    t.integer "deathDay"
-    t.string "deathCountry", limit: 510
-    t.string "deathState", limit: 510
-    t.string "deathCity", limit: 510
-    t.string "nameFirst", limit: 510
-    t.string "nameLast", limit: 510
-    t.string "nameGiven", limit: 510
-    t.integer "weight"
-    t.integer "height"
-    t.string "bats", limit: 510
-    t.string "throws", limit: 510
-    t.string "debut", limit: 510
-    t.string "finalGame", limit: 510
-    t.string "retroID", limit: 510
-    t.string "bbrefID", limit: 510
-    t.index ["bbrefID"], name: "Master_bbrefID_idx"
-    t.index ["retroID"], name: "Master_retroID_idx"
+  create_table "pitching_stats", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "year_id", null: false
+    t.integer "stint", null: false
+    t.string "team_code", null: false
+    t.string "league_code", null: false
+    t.integer "num_w"
+    t.integer "num_l"
+    t.integer "num_g"
+    t.integer "num_gs"
+    t.integer "num_cg"
+    t.integer "num_sho"
+    t.integer "num_sv"
+    t.integer "num_ipouts"
+    t.integer "num_h"
+    t.integer "num_er"
+    t.integer "num_hr"
+    t.integer "num_bb"
+    t.integer "num_so"
+    t.decimal "baopp", precision: 4, scale: 3
+    t.decimal "era", precision: 5, scale: 2
+    t.integer "num_ibb"
+    t.integer "num_wp"
+    t.integer "num_hbp"
+    t.integer "num_bk"
+    t.integer "num_bfp"
+    t.integer "num_gf"
+    t.integer "num_r"
+    t.integer "num_sh"
+    t.integer "num_sf"
+    t.integer "num_gidp"
+    t.string "lahman_player_id", null: false
+    t.index ["lahman_player_id"], name: "index_pitching_stats_on_lahman_player_id"
+    t.index ["league_code"], name: "index_pitching_stats_on_league_code"
+    t.index ["stint"], name: "index_pitching_stats_on_stint"
+    t.index ["team_code"], name: "index_pitching_stats_on_team_code"
+    t.index ["year_id"], name: "index_pitching_stats_on_year_id"
   end
 
   create_table "players", force: :cascade do |t|
