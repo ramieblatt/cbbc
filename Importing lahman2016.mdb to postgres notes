@@ -1,0 +1,12 @@
+Importing lahman2016.mdb to postgres notes
+
+brew install mdbtools # need to use these mdbtools
+cd ~ramie/cbbc # cd to working directory where lahman2016.mdb is located
+mkdir sql # create sql subdirectory
+mdb-schema lahman2016.mdb postgres  --no-relations > sql/AAAlahman2016schema.sql # export schema to this file which we want to appear as first file alphanumerically, GOTCHA note no relations switch which just breaks otherwise
+for i in $( mdb-tables lahman2016.mdb ); do echo $i ; mdb-export -q \' -H -I postgres lahman2016.mdb $i > $i.sql; done # export the table sql, GOTCHA note that we change quote character to single quote (escaped) because default double quote around values mean columns in postgres
+touch lahman2016.sql # create empty lahman2016.sql file
+cat sql/*.sql >> lahman2016.sql # append all swl files into one big one in alphabetical order
+createdb -E UTF8 -O deploy lahman2016 # create the lahman2016 postgres db
+
+# import using psql or use application pgAdmin or Navicat to execute the lahman2016.sql on lahman2016

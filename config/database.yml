@@ -1,0 +1,20 @@
+defaults: &common
+  adapter: postgresql
+  database: cbbc
+  username: deploy
+  password: deploy
+  encoding: UTF8
+  min_messages: warning
+  wait_timeout: 10
+  pool: 30
+  template: template0
+  host: localhost
+development:
+  <<: *common
+test:
+  database: cbbc_test
+  <<: *common
+staging:
+  <<: *common
+production:
+  <<: *common
