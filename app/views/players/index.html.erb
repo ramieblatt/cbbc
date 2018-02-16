@@ -2,24 +2,24 @@
 
 <h1>Players</h1>
 
+<%= paginate @players %>
+
+<% cols = 5 %>
 <table>
   <thead>
     <tr>
-      <th colspan="3"></th>
+      <th colspan="<%= cols %>"></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @players.each do |player| %>
-      <tr>
-        <td><%= link_to 'Show', player %></td>
-        <td><%= link_to 'Edit', edit_player_path(player) %></td>
-        <td><%= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+    <tr>
+    <% @players.each_with_index do |player, i| %>
+      <% if (i % cols == 0) %></tr><tr><% end %>
+      <td><%= link_to "#{player.first_name} #{player.last_name}", player %></td>
     <% end %>
+    </tr>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Player', new_player_path %>

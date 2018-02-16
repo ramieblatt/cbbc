@@ -47,6 +47,18 @@ gem 'pg'
 # gem 'activerecord-collection_cache_key'
 # PostGres gems end
 
+# Ethereum/IPFS gems start
+gem 'ipfs-api', '~> 0.3.0'
+# gem 'ethereum.rb'
+gem 'ethereum.rb', git: 'https://github.com/ramieblatt/ethereum.rb' # using fork because some rake tasks broken with later versions of parity
+gem 'web3-eth'
+# Ethereum gems end
+
+# Toolset gems start
+gem 'kaminari'
+# Toolset gems end
+
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

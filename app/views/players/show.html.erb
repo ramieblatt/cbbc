@@ -1,4 +1,10 @@
 <p id="notice"><%= notice %></p>
 
+<h1><%= link_to "#{@player.first_name} #{@player.last_name}", "https://www.baseball-reference.com/players/#{@player.lahman_bbref_id.to_s[0]}/#{@player.lahman_bbref_id}.shtml", target: '_new' %></h1>
+<h5>Full Name: <%= @player.given_name %> <%= @player.last_name %></h5>
+<h4>Position(s): <%= @player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %>, Bats: <%= @player.bats %>, Throws: <%= @player.throws %>, <%= (@player.height/12).floor %>' <%= (@player.height % 12) %>", <%= @player.weight %> lbs</h4>
+<h4>Debut: <%= @player.debut %>, Last Game: <%= @player.final_game %></h4>
+<h4>Born: <%= @player.birthday %> in <%= @player.birth_city %>, <%= @player.birth_state %>, <%= @player.birth_country %></h4>
+
 <%= link_to 'Edit', edit_player_path(@player) %> |
-<%= link_to 'Back', players_path %>
+<%= link_to 'Back', (request.referer || players_path) %>
