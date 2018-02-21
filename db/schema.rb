@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180212182641) do
+ActiveRecord::Schema.define(version: 20180220022950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,31 @@ ActiveRecord::Schema.define(version: 20180212182641) do
     t.index ["stint"], name: "index_batting_stats_on_stint"
     t.index ["team_code"], name: "index_batting_stats_on_team_code"
     t.index ["year_id"], name: "index_batting_stats_on_year_id"
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "edition_id", null: false
+    t.integer "pack_id"
+    t.date "minted_at"
+    t.integer "series_index", default: 1, null: false
+    t.integer "total_cards_in_series", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["edition_id"], name: "index_cards_on_edition_id"
+    t.index ["minted_at"], name: "index_cards_on_minted_at"
+    t.index ["pack_id"], name: "index_cards_on_pack_id"
+    t.index ["player_id"], name: "index_cards_on_player_id"
+    t.index ["series_index"], name: "index_cards_on_series_index"
+  end
+
+  create_table "editions", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "number", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_editions_on_name"
+    t.index ["number"], name: "index_editions_on_number"
   end
 
   create_table "fielding_stats", force: :cascade do |t|
@@ -553,6 +578,15 @@ ActiveRecord::Schema.define(version: 20180212182641) do
     t.integer "W"
     t.integer "L"
     t.index ["divID"], name: "TeamsHalf_divID_idx"
+  end
+
+  create_table "packs", force: :cascade do |t|
+    t.integer "edition_id"
+    t.date "minted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["edition_id"], name: "index_packs_on_edition_id"
+    t.index ["minted_at"], name: "index_packs_on_minted_at"
   end
 
   create_table "pitching_stats", force: :cascade do |t|
