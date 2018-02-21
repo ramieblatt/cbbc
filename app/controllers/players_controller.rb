@@ -10,6 +10,10 @@ class PlayersController < ApplicationController
   # GET /players/1
   # GET /players/1.json
   def show
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: @player, status: 200 }
+    end
   end
 
   # GET /players/new

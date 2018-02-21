@@ -1,0 +1,17 @@
+<%= form_with(model: edition, local: true) do |form| %>
+  <% if edition.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(edition.errors.count, "error") %> prohibited this edition from being saved:</h2>
+
+      <ul>
+      <% edition.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
