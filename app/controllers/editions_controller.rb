@@ -1,5 +1,5 @@
 class EditionsController < ApplicationController
-  before_action :set_edition, only: [:show, :edit, :update, :destroy]
+  before_action :set_edition, only: [:show, :edit, :update, :destroy, :create_cards]
 
   # GET /editions
   # GET /editions.json
@@ -25,7 +25,7 @@ class EditionsController < ApplicationController
   # POST /editions.json
   def create
     @edition = Edition.new(edition_params)
-
+    @edition.number = Edition.next_edition_number
     respond_to do |format|
       if @edition.save
         format.html { redirect_to @edition, notice: 'Edition was successfully created.' }
@@ -56,8 +56,16 @@ class EditionsController < ApplicationController
   def destroy
     @edition.destroy
     respond_to do |format|
-      format.html { redirect_to editions_url, notice: 'Edition was successfully destroyed.' }
+      format.html { redirect_to edition_url, notice: 'Edition was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def create_cards
+    if res = @edition.create_cards({total_cards: 1000})
+      redirect_to @edition, notice: "Edition card set of #{res} was successfully created."
+    else
+      redirect_to @edition, error: "Edition card set could not be created."
     end
   end
 

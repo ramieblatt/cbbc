@@ -1,0 +1,12 @@
+<% cols = 5 %>
+<%= paginate cards %>
+<table border=1>
+  <tbody>
+    <tr>
+    <% cards.each_with_index do |card, i| %>
+      <% if (i % cols == 0) %></tr><tr><% end %>
+      <td><%= render partial: 'cards/card', locals: { card: card} %></td>
+    <% end %>
+    </tr>
+  </tbody>
+</table>

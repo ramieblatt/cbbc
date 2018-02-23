@@ -55,8 +55,20 @@ gem 'web3-eth'
 
 # Toolset gems start
 gem 'kaminari'
+gem 'simple_form'
 # Toolset gems end
 
+gem 'bootstrap-sass'
+gem "bootstrap-table-rails"
+gem 'bootstrap-slider-rails'
+gem 'jquery-rails'
+gem 'jquery-ui-sass-rails'
+gem 'jquery-timepicker-rails'
+gem 'jquery-inputmask-rails'
+gem 'jquery-fileupload-rails'
+gem 'font-awesome-rails'
+
+gem 'lockup'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -76,4 +88,4 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data'

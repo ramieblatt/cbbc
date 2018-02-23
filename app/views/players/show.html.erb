@@ -6,5 +6,10 @@
 <h4>Debut: <%= @player.debut %>, Last Game: <%= @player.final_game %></h4>
 <h4>Born: <%= @player.birthday %> in <%= @player.birth_city %>, <%= @player.birth_state %>, <%= @player.birth_country %></h4>
 
-<%= link_to 'Edit', edit_player_path(@player) %> |
-<%= link_to 'Back', (request.referer || players_path) %>
+<div class="cards">
+  <%= render partial: 'cards/cards', locals: { cards: @player.cards.page(params[:page])} %>
+</div>
+
+<div class="actions">
+  <%= link_to 'Back', (request.referer || players_path) %>
+</div>

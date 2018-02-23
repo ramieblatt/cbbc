@@ -1,4 +1,19 @@
 <p id="notice"><%= notice %></p>
 
-<%= link_to 'Edit', edit_edition_path(@edition) %> |
-<%= link_to 'Back', editions_path %>
+<h1>Edition <%= @edition.number %>, Name:<%= @edition.name %></h1>
+
+<% unless @edition.is_published? %>
+  <%= button_to 'Generate 1000 random shuffle cards', create_cards_edition_path(@edition), data: { confirm: 'Are you sure? This will remove all existing cards' } %>
+  <p/>
+<% end %>
+
+<div class="cards">
+  <%= render partial: 'cards/cards', locals: { cards: @edition.cards.page(params[:page])} %>
+</div>
+
+<p/>
+
+<div class="actions">
+  <%= link_to 'Edit', edit_edition_path(@edition) %> |
+  <%= link_to 'Back', editions_path %>
+</div>
