@@ -8,7 +8,7 @@ class Player < ApplicationRecord
   has_many :managers, inverse_of: :player
   has_many :cards, inverse_of: :player
   include ActiveModel::Serialization
-  paginates_per 100
+  paginates_per 20
   DATABASE_EDITION_YEAR = "2016"
 
   scope :active, -> { where("players.debut IS NOT NULL AND (players.final_game >= ?)", Date.parse("#{DATABASE_EDITION_YEAR}-01-01")) } # only way to derive from data is to assume active if they played during the db edition year, there are ~200 records where debut and final game are null, so skip those

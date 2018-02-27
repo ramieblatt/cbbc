@@ -2,24 +2,6 @@
 
 <h1>Players</h1>
 
-<%= paginate @players %>
+<%= paginate @players, theme: 'twitter-bootstrap-4' %>
 
-<% cols = 5 %>
-<table>
-  <thead>
-    <tr>
-      <th colspan="<%= cols %>"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-    <% @players.each_with_index do |player, i| %>
-      <% if (i % cols == 0) %></tr><tr><% end %>
-      <td><%= link_to "#{player.first_name} #{player.last_name}", player %></td>
-    <% end %>
-    </tr>
-  </tbody>
-</table>
-
-<br>
+<%= render partial: 'players/players', locals: { players: @players} %>

@@ -16,6 +16,10 @@ class PlayersController < ApplicationController
     end
   end
 
+  def index
+    @players = Player.page(params[:page])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_player
