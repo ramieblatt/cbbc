@@ -26,9 +26,12 @@ class Player < ApplicationRecord
   scope :with_career_num_sv_greater_than, -> (tot_sv) { where(id: Player.select("players.id, SUM(pitching_stats.num_sv)").joins(:pitching_stats).group("players.id").having("SUM(pitching_stats.num_sv) > ?", tot_sv).pluck("distinct players.id")) }
   scope :with_career_num_sv_less_than, -> (tot_sv) { where(id: Player.select("players.id, SUM(pitching_stats.num_sv)").joins(:pitching_stats).group("players.id").having("SUM(pitching_stats.num_sv) < ?", tot_sv).pluck("distinct players.id")) }
   scope :with_career_winning_percentage_greater_than, -> (win_percentage) { where(id: Player.select("players.id, cast(SUM(pitching_stats.num_w) as decimal) / (SUM(pitching_stats.num_w)+SUM(pitching_stats.num_l))").joins(:pitching_stats).group("players.id").having("cast(SUM(pitching_stats.num_w) as decimal) / (SUM(pitching_stats.num_w)+SUM(pitching_stats.num_l)) > ?", win_percentage).pluck("distinct players.id")) }
-  scope :with_career_num_sv_greater_than, -> (tot_sv) { where(id: Player.select("players.id, SUM(pitching_stats.num_sv)").joins(:pitching_stats).group("players.id").having("SUM(pitching_stats.num_sv) > ?", tot_sv).pluck("distinct players.id")) }
   scope :hall_of_famers, -> { where(id: Player.joins(:hall_of_fame_appearances).where("hall_of_fame_appearances.inducted IS TRUE").pluck("distinct players.id")) }
   scope :all_stars, -> { where(id: Player.joins(:all_star_appearances).where("all_star_appearances.played IS TRUE").pluck("distinct players.id")) }
   scope :top_managers, -> (lim) { ids = Player.find_by_sql(["select players.id from players left join (select player_id, sum(num_w) as w_sum from managers group by player_id) as sums on players.id = sums.player_id where sums.w_sum > 1 order by sums.w_sum DESC LIMIT ?", lim]).pluck(:id); Player.where(id: ids).order("position(id::text in '#{ids.join(',')}')") } # need to do this to get correct sorting and performance
   scope :negro_league_hall_of_famers, -> { where(id: Player.joins(:hall_of_fame_appearances).where("hall_of_fame_appearances.inducted IS TRUE AND hall_of_fame_appearances.voted_by = 'Negro League'").pluck("distinct players.id")) }
+
+  def self.position_code_select_options
+    FieldingStat.pluck("distinct position_code").sort_by{|pos_code| pos_code}.map{|pos_code| [pos_code]}
+  end
 end

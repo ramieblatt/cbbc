@@ -2,6 +2,24 @@
 
 <h1>Players</h1>
 
+<%= search_form_for @q do |f| %>
+
+  <%= f.label "Name" %>
+  <%= f.search_field :first_name_or_last_name_or_given_name_cont %>
+
+  <%= f.label "BBRef ID" %>
+  <%= f.search_field :lahman_bbref_id_cont %>
+
+  <%= f.label "Position" %>
+  <%= f.search_field :batting_stats_num_ab_gt %>
+  <%= f.collection_select :fielding_stats_position_code_in, FieldingStat.select("distinct position_code").order(:position_code), :position_code, :position_code, include_blank: true %>
+
+  <%= f.label "Plate Appearances" %>
+  <%= f.search_field :batting_stats_num_ab_gt %>
+
+  <%= f.submit %>
+<% end %>
+
 <%= paginate @players, theme: 'twitter-bootstrap-4' %>
 
-<%= render partial: 'players/players', locals: { players: @players} %>
+<%= render partial: 'players/players' %>

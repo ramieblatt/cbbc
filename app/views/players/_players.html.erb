@@ -1,24 +1,24 @@
 <table data-toggle="table">
   <thead>
     <tr>
-      <th>BBRef ID</th>
+      <th><%= sort_link(@q, :lahman_bbref_id, 'BBRef ID', default_order: :asc) %></th>
       <th>Full Name</th>
       <th>First</th>
-      <th>Last</th>
+      <th><%= sort_link(@q, :last_name) %></th>
       <th>Pos</th>
-      <th>Bats</th>
-      <th>Throws</th>
-      <th>Height</th>
-      <th>Weight</th>
-      <th>Debut</th>
-      <th>Last Game</th>
-      <th>Born</th>
+      <th><%= sort_link(@q, :bats) %></th>
+      <th><%= sort_link(@q, :throws) %></th>
+      <th><%= sort_link(@q, :height) %></th>
+      <th><%= sort_link(@q, :weight) %></th>
+      <th><%= sort_link(@q, :debut) %></th>
+      <th><%= sort_link(@q, :final_game) %></th>
+      <th><%= sort_link(@q, :birthday) %></th>
       <th>Place</th>
     </tr>
   </thead>
 
   <tbody>
-    <% players.each_with_index do |player, i| %>
+    <% @players.each_with_index do |player, i| %>
       <tr>
         <td><%= link_to "#{player.lahman_bbref_id}", "https://www.baseball-reference.com/players/#{player.lahman_bbref_id.to_s[0]}/#{player.lahman_bbref_id}.shtml", target: '_new' %></td>
         <td><%= player.given_name %> <%= player.last_name %></td>

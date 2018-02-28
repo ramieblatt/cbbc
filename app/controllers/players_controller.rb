@@ -4,7 +4,8 @@ class PlayersController < ApplicationController
   # GET /players
   # GET /players.json
   def index
-    @players = Player.page(params[:page])
+    @q = Player.ransack(params[:q])
+    @players = @q.result.includes(:batting_stats).includes(:pitching_stats).includes(:fielding_stats).page(params[:page])
   end
 
   # GET /players/1
@@ -14,10 +15,6 @@ class PlayersController < ApplicationController
       format.html { render :show }
       format.json { render json: @player, status: 200 }
     end
-  end
-
-  def index
-    @players = Player.page(params[:page])
   end
 
   private
