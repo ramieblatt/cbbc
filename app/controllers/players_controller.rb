@@ -5,7 +5,13 @@ class PlayersController < ApplicationController
   # GET /players.json
   def index
     @q = Player.ransack(params[:q])
-    @players = @q.result.includes(:batting_stats).includes(:pitching_stats).includes(:fielding_stats).page(params[:page])
+    @players = @q.result(distinct: true).includes(:batting_stats).includes(:pitching_stats).includes(:fielding_stats).page(params[:page])
+  end
+
+  def prebuilt_search
+    @q = Player.ransack(params[:q])
+    @players = Player.apply_prebuilt_search(params[:query]).includes(:batting_stats).includes(:pitching_stats).includes(:fielding_stats).page(params[:page])
+    render :index
   end
 
   # GET /players/1

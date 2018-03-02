@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   mount Lockup::Engine, at: '/lockup'
   resources :cards
-  resources :players
+  resources :players do
+    collection do
+      get :prebuilt_search
+    end
+  end
   resources :editions do
     member do
       post :create_cards

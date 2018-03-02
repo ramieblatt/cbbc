@@ -4,6 +4,14 @@
 
 <%= search_form_for @q do |f| %>
 
+  <%= link_to "Non-active Players with 5000 or more PA", prebuilt_search_players_url(query: {non_active: nil, with_career_num_ab_greater_than: 5000}, class:"default-button") %>
+  <%= link_to "Non-active Players with 1800 or more IP and .520+ win percentage", prebuilt_search_players_url(query: {non_active: nil, with_career_num_ips_greater_than: 1800, with_career_winning_percentage_greater_than: 0.52}, class:"default-button") %>
+  <%= link_to "Non-active Players with 184 or more saves", prebuilt_search_players_url(query: {non_active: nil, with_career_num_sv_greater_than: 184}, class:"default-button") %><br/>
+  <%= link_to "Non-active Players with fewer than 5000 PA in the Hall of Fame", prebuilt_search_players_url(query: {non_active: nil, with_career_num_ab_less_than: 5000, hall_of_famers: nil}, class:"default-button") %>
+  <%= link_to "Active Players that have appeared in an All Star Game", prebuilt_search_players_url(query: {active: nil, all_stars: nil}, class:"default-button") %>
+  <%= link_to "Top 100 Managers", prebuilt_search_players_url(query: {top_managers: 100}, class:"default-button") %>
+  <%= link_to "Negro League Players in the Hall of Fame", prebuilt_search_players_url(query: {negro_league_hall_of_famers: nil}, class:"default-button") %><br/>
+  OR<br/>
   <%= f.label "Name" %>
   <%= f.search_field :first_name_or_last_name_or_given_name_cont %>
 
@@ -11,15 +19,20 @@
   <%= f.search_field :lahman_bbref_id_cont %>
 
   <%= f.label "Position" %>
-  <%= f.search_field :batting_stats_num_ab_gt %>
   <%= f.collection_select :fielding_stats_position_code_in, FieldingStat.select("distinct position_code").order(:position_code), :position_code, :position_code, include_blank: true %>
 
   <%= f.label "Plate Appearances" %>
   <%= f.search_field :batting_stats_num_ab_gt %>
 
   <%= f.submit %>
+
+  <%= link_to "Clear Search", request.path, class:"cancel-button" %>
+
 <% end %>
 
+<b>Total: <%= @players.total_count %></b>
+<%= paginate @players, theme: 'twitter-bootstrap-4' %>
+<%= render partial: 'players/players' %>
+<b>Total: <%= @players.total_count %></b>
 <%= paginate @players, theme: 'twitter-bootstrap-4' %>
 
-<%= render partial: 'players/players' %>

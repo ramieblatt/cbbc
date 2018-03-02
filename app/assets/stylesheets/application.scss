@@ -13,3 +13,20 @@
  */
 @import "bootstrap";
 @import "bootstrap-table";
+
+html { background:#efefef; font-family:Arial, Verdana, sans-serif; font-size:13px; }
+body { padding:10; margin:10; }
+div.canvas {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+// Get rid of stupid arrows bg image
+.fixed-table-container thead th .desc {
+  background-image: url("");
+}
+.fixed-table-container thead th .asc {
+  background-image: url("");
+}
