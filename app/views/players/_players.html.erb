@@ -2,7 +2,6 @@
   <thead>
     <tr>
       <th><%= sort_link(@q, :lahman_bbref_id, 'BBRef ID', default_order: :asc) %></th>
-      <th>Full Name</th>
       <th>First</th>
       <th><%= sort_link(@q, :last_name) %></th>
       <th>Pos</th>
@@ -14,15 +13,14 @@
       <th><%= sort_link(@q, :final_game) %></th>
       <th><%= sort_link(@q, :birthday) %></th>
       <th>Place</th>
-      <th><%= sort_link(@q, :tot_ab_batter, "PA") %></th>
+      <th><%= sort_link(@q, :tot_ab_batter, "PA", default_order: :desc) %></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @players.each_with_index do |player, i| %>
+    <% @players.each do |player| %>
       <tr>
         <td><%= link_to "#{player.lahman_bbref_id}", "https://www.baseball-reference.com/#{player.is_mlbp? ? 'players/'+player.lahman_bbref_id.to_s[0] : 'nonmlbpa'}/#{player.lahman_bbref_id}.shtml", target: '_new' %></td>
-        <td><%= player.given_name %> <%= player.last_name %></td>
         <td><%= player.first_name %></td>
         <td><%= player.last_name %></td>
         <td><%= player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %></td>

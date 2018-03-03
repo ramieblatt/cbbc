@@ -5,7 +5,11 @@ class PlayersController < ApplicationController
   # GET /players.json
   def index
     @q = Player.ransack(params[:q])
-    @players = @q.result(distinct: true).includes(:batting_stats).includes(:pitching_stats).includes(:fielding_stats).page(params[:page])
+    result = @q.result(distinct: true)
+    if @q.sorts.any?
+      result = result.except(:order).order("#{@q.sorts.first.name} #{@q.sorts.first.dir} NULLS LAST")
+    end
+    @players = result.includes(:batting_stats).includes(:pitching_stats).includes(:fielding_stats).page(params[:page])
   end
 
   def prebuilt_search
