@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :players do
     collection do
       get :prebuilt_search
+      post :prebuilt_search
     end
   end
   resources :editions do

@@ -10,10 +10,57 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180221003348) do
+ActiveRecord::Schema.define(version: 20180302010201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "all_star_appearances", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "year_id", null: false
+    t.string "game_number", null: false
+    t.string "game_code"
+    t.string "team_code", null: false
+    t.string "league_code", null: false
+    t.boolean "played", default: false, null: false
+    t.integer "starting_pos"
+    t.string "lahman_player_id", null: false
+    t.index ["game_code"], name: "index_all_star_appearances_on_game_code"
+    t.index ["game_number"], name: "index_all_star_appearances_on_game_number"
+    t.index ["lahman_player_id"], name: "index_all_star_appearances_on_lahman_player_id"
+    t.index ["league_code"], name: "index_all_star_appearances_on_league_code"
+    t.index ["team_code"], name: "index_all_star_appearances_on_team_code"
+    t.index ["year_id"], name: "index_all_star_appearances_on_year_id"
+  end
+
+  create_table "appearances", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "year_id", null: false
+    t.string "team_code", null: false
+    t.string "league_code", null: false
+    t.integer "num_g"
+    t.integer "num_gs"
+    t.integer "num_gb"
+    t.integer "num_gd"
+    t.integer "num_gp"
+    t.integer "num_gc"
+    t.integer "num_g1b"
+    t.integer "num_g2b"
+    t.integer "num_g3b"
+    t.integer "num_gss"
+    t.integer "num_glf"
+    t.integer "num_gcf"
+    t.integer "num_grf"
+    t.integer "num_gof"
+    t.integer "num_gdh"
+    t.integer "num_gph"
+    t.integer "num_gpr"
+    t.string "lahman_player_id", null: false
+    t.index ["lahman_player_id"], name: "index_appearances_on_lahman_player_id"
+    t.index ["league_code"], name: "index_appearances_on_league_code"
+    t.index ["team_code"], name: "index_appearances_on_team_code"
+    t.index ["year_id"], name: "index_appearances_on_year_id"
+  end
 
   create_table "batting_stats", force: :cascade do |t|
     t.integer "player_id", null: false
@@ -99,6 +146,23 @@ ActiveRecord::Schema.define(version: 20180221003348) do
     t.index ["stint"], name: "index_fielding_stats_on_stint"
     t.index ["team_code"], name: "index_fielding_stats_on_team_code"
     t.index ["year_id"], name: "index_fielding_stats_on_year_id"
+  end
+
+  create_table "hall_of_fame_appearances", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "year_id", null: false
+    t.string "voted_by", null: false
+    t.integer "ballots"
+    t.integer "needed"
+    t.integer "votes"
+    t.boolean "inducted", default: false, null: false
+    t.string "category", null: false
+    t.string "needed_note"
+    t.string "lahman_player_id", null: false
+    t.index ["category"], name: "index_hall_of_fame_appearances_on_category"
+    t.index ["lahman_player_id"], name: "index_hall_of_fame_appearances_on_lahman_player_id"
+    t.index ["voted_by"], name: "index_hall_of_fame_appearances_on_voted_by"
+    t.index ["year_id"], name: "index_hall_of_fame_appearances_on_year_id"
   end
 
   create_table "legacy_all_star_full", primary_key: ["playerID", "yearID", "gameNum"], force: :cascade do |t|
@@ -582,6 +646,24 @@ ActiveRecord::Schema.define(version: 20180221003348) do
     t.index ["divID"], name: "TeamsHalf_divID_idx"
   end
 
+  create_table "managers", force: :cascade do |t|
+    t.integer "player_id", null: false
+    t.integer "year_id", null: false
+    t.string "team_code", null: false
+    t.string "league_code", null: false
+    t.integer "order_in_season"
+    t.integer "num_g"
+    t.integer "num_w"
+    t.integer "num_l"
+    t.integer "rank"
+    t.boolean "player_manager", default: false, null: false
+    t.string "lahman_player_id", null: false
+    t.index ["lahman_player_id"], name: "index_managers_on_lahman_player_id"
+    t.index ["league_code"], name: "index_managers_on_league_code"
+    t.index ["team_code"], name: "index_managers_on_team_code"
+    t.index ["year_id"], name: "index_managers_on_year_id"
+  end
+
   create_table "packs", force: :cascade do |t|
     t.integer "edition_id"
     t.date "minted_at"
@@ -661,6 +743,34 @@ ActiveRecord::Schema.define(version: 20180221003348) do
     t.string "lahman_final_game"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_mlbp", default: true, null: false
+    t.boolean "is_pitcher", default: false, null: false
+    t.boolean "is_manager", default: false, null: false
+    t.boolean "is_all_star", default: false, null: false
+    t.boolean "is_hall_of_famer", default: false, null: false
+    t.boolean "is_nlg_hall_of_famer", default: false, null: false
+    t.integer "tot_g_batter"
+    t.integer "tot_ab_batter"
+    t.integer "tot_r_batter"
+    t.integer "tot_h_batter"
+    t.integer "tot_hr_batter"
+    t.integer "tot_rbi_batter"
+    t.integer "tot_sb_batter"
+    t.integer "tot_bb_batter"
+    t.integer "tot_ibb_batter"
+    t.integer "tot_w_pitcher"
+    t.integer "tot_l_pitcher"
+    t.integer "tot_g_pitcher"
+    t.integer "tot_gs_pitcher"
+    t.integer "tot_cg_pitcher"
+    t.integer "tot_sho_pitcher"
+    t.integer "tot_sv_pitcher"
+    t.integer "tot_ipouts_pitcher"
+    t.integer "tot_er_pitcher"
+    t.integer "tot_so_pitcher"
+    t.integer "tot_g_manager"
+    t.integer "tot_w_manager"
+    t.integer "tot_l_manager"
     t.index ["lahman_bbref_id"], name: "index_players_on_lahman_bbref_id"
     t.index ["lahman_player_id"], name: "index_players_on_lahman_player_id"
     t.index ["lahman_retro_id"], name: "index_players_on_lahman_retro_id"
