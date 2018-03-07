@@ -3,12 +3,14 @@
 <h1>Edition <%= @edition.number %>, Name:<%= @edition.name %></h1>
 
 <% unless @edition.is_published? %>
-  <%= button_to 'Generate 1000 random shuffle cards', create_cards_edition_path(@edition), data: { confirm: 'Are you sure? This will remove all existing cards' } %>
+  <%= button_to 'Remove all cards', remove_all_cards_edition_path(@edition), data: { confirm: 'Are you sure? This will remove all existing cards' } %>
+  <p/>
+  <%= button_to 'Generate cards from players', players_path %>
   <p/>
 <% end %>
 
 <div class="cards">
-  <%= render partial: 'cards/cards', locals: { cards: @edition.cards.page(params[:page])} %>
+  <%= render partial: 'cards/cards', locals: { cards: @edition.cards.order("cards.total_cards_in_series ASC, cards.player_id DESC, id ASC").page(params[:page])} %>
 </div>
 
 <p/>

@@ -1,5 +1,5 @@
 class EditionsController < ApplicationController
-  before_action :set_edition, only: [:show, :edit, :update, :destroy, :create_cards]
+  before_action :set_edition, only: [:show, :edit, :update, :destroy, :create_cards, :remove_all_cards]
 
   # GET /editions
   # GET /editions.json
@@ -66,6 +66,24 @@ class EditionsController < ApplicationController
       redirect_to @edition, notice: "Edition card set of #{res} was successfully created."
     else
       redirect_to @edition, error: "Edition card set could not be created."
+    end
+  end
+
+  def create_cards_from_players
+    @edition = Edition.find(params[:edition].delete(:id))
+
+    if res = @edition.create_cards_from_players(params[:edition])
+      redirect_to @edition, notice: "Edition card set of #{res} was successfully created."
+    else
+      redirect_to @edition, error: "Edition card set could not be created."
+    end
+  end
+
+  def remove_all_cards
+    if @edition.is_published != true and res = @edition.cards.destroy_all
+      redirect_to @edition, notice: "Edition card set was successfully destroyed."
+    else
+      redirect_to @edition, error: "Edition card set could not be destroyed."
     end
   end
 

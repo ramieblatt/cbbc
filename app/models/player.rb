@@ -11,21 +11,15 @@ class Player < ApplicationRecord
   paginates_per 20
   DATABASE_EDITION_YEAR = "2016"
   PREBUILT_QUERIES = [
-    "active",
-    "non_active",
-    "pitchers",
-    "non_pitchers",
     "with_career_num_ab_greater_than",
     "with_career_num_ab_less_than",
     "with_career_num_ips_greater_than",
     "with_career_winning_percentage_greater_than",
     "with_career_num_sv_greater_than",
-    "hall_of_famers",
-    "all_stars",
-    "managers_with_career_w_greater_than",
-    "negro_league_hall_of_famers"
+    "managers_with_career_w_greater_than"
   ]
 
+  scope :active_is, -> (active_flag) { where(active: ActiveModel::Type::Boolean.new.cast(active_flag)) }
   scope :active, -> { where(active: true) }
   scope :non_active, -> { where(active: false) }
   scope :pitchers, -> { where(is_pitcher: true) }

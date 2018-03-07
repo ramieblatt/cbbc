@@ -1,0 +1,6 @@
+<%= f.label "Edition" %>
+<%= f.collection_select :id, Edition.unpublished, :id, :name_with_number %>
+<%= f.label "Average number of cards per player" %>
+<%= f.collection_select :average_num_cards, Card::AVERAGE_NUMBERS_PER_PLAYER, :to_i, :to_s %>
+<%= f.hidden_field :q_json, value: params[:q].to_json %>
+<%= f.submit "Create Cards From These Players", data: { confirm: 'Are you sure? This will add cards for this set of players in random amounts with the selected average per player' } %>
