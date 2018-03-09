@@ -81,8 +81,8 @@ class EditionsController < ApplicationController
   end
 
   def remove_all_cards
-    if @edition.is_published != true and res = @edition.cards.destroy_all
-      redirect_to @edition, notice: "Edition card set was successfully destroyed."
+    if @edition.is_published != true and res = @edition.remove_all_cards!
+      redirect_to players_url, notice: "Edition card set was successfully destroyed."
     else
       redirect_to @edition, error: "Edition card set could not be destroyed."
     end

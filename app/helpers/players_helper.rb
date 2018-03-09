@@ -14,4 +14,16 @@ module PlayersHelper
     return raw(res)
   end
 
+  def select_card_type_from_search
+    res = "player"
+    if params["q"]
+      if params["q"]["is_manager_eq"] == "true"
+        res = "manager"
+      elsif params["q"]["is_pitcher_eq"] == "true"
+        res = "pitcher"
+      end
+    end
+    return res
+  end
+
 end
