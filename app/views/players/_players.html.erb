@@ -21,18 +21,10 @@
     <% @players.each do |player| %>
       <tr>
         <td>
-          <% if player.is_mlbp? or (!player.is_manager?) %>
-            <%= link_to "#{player.lahman_bbref_id}", "https://www.baseball-reference.com/#{player.is_mlbp? ? 'players/'+player.lahman_bbref_id.to_s[0] : 'nonmlbpa'}/#{player.lahman_bbref_id}.shtml", target: '_new' %>
-          <% end %>
-          <% if player.is_manager? %>
-            <% if player.is_mlbp? %>
-              <br/>
-            <% end %>
-            <%= link_to "#{player.lahman_bbref_id} (Manager)", "https://www.baseball-reference.com/managers/#{player.lahman_bbref_id}.shtml", target: '_new_mgr' %>
-          <% end %>
+          <%= player_links_to_bbref(player) %>
         </td>
-        <td><%= player.first_name %></td>
-        <td><%= player.last_name %></td>
+        <td><%= link_to player.first_name, player_url(player.id) %></td>
+        <td><%= link_to player.last_name, player_url(player.id) %></td>
         <td><%= player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %></td>
         <td><%= player.bats %></td>
         <td><%= player.throws %></td>

@@ -5,7 +5,11 @@
   <div class="card-body">
     <%= link_to 'Back', (request.referer || players_path), class: "btn btn-outline-primary btn-sm" %>
     <p/>
-    <p>Full Name: <%= link_to "#{@player.given_name} #{@player.last_name}", "https://www.baseball-reference.com/players/#{@player.lahman_bbref_id.to_s[0]}/#{@player.lahman_bbref_id}.shtml", target: '_new' %>, Position(s): <%= @player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %>, Bats: <%= @player.bats %>, Throws: <%= @player.throws %>, <%= (@player.height.to_i/12).floor %>' <%= (@player.height.to_i % 12) %>", <%= @player.weight %> lbs, Debut: <%= @player.debut %>, Last Game: <%= @player.final_game %>, Born: <%= @player.birthday %> in <%= @player.birth_city %>, <%= @player.birth_state %>, <%= @player.birth_country %></p>
+    <p>BaseballReference.com ID: <%= player_links_to_bbref(@player, separator=" | ") %></p>
+    <p>Full Name: <%= @player.given_name %> <%= @player.last_name %></p>
+    <p>Position(s): <%= @player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %></p>
+    <p>Bats: <%= @player.bats %>, Throws: <%= @player.throws %>, <%= (@player.height.to_i/12).floor %>' <%= (@player.height.to_i % 12) %>", <%= @player.weight %> lbs</p>
+    <p>Debut: <%= @player.debut %>, Last Game: <%= @player.final_game %>, Born: <%= @player.birthday %> in <%= @player.birth_city %>, <%= @player.birth_state %>, <%= @player.birth_country %></p>
     <p/>
     <p>Cards:</p>
     <div class="cards">
