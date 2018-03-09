@@ -2,7 +2,6 @@
   <% if @edition.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(edition.errors.count, "error") %> prohibited this edition from being saved:</h2>
-
       <ul>
       <% @edition.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -10,9 +9,29 @@
       </ul>
     </div>
   <% end %>
-  Edition number: <%= @edition.number || Edition.next_edition_number %>
-  <%= form.input :name %>
-  <div class="actions">
-    <%= form.submit %>
+  <div class="form-group">
+    <fieldset>
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <%= form.input :number, class: "form-control-sm", disabled: true, placeholder: Edition.next_edition_number %>
+                </th>
+                <th>
+                  <%= form.input :name, class: "form-control-sm" %>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <%= form.submit "Save", class: "btn btn-primary btn-sm" %>
+                </td>
+                <td>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </fieldset>
   </div>
 <% end %>

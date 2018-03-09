@@ -1,22 +1,5 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Cards</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @cards.each do |card| %>
-      <tr>
-        <td><%= link_to 'Show', card %></td>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Card', new_card_path %>
+<div class="cards">
+  <%= render partial: 'cards/cards', locals: { cards: @cards.order("cards.total_cards_in_series ASC, cards.edition_id ASC, cards.player_id DESC, id ASC").page(params[:page])} %>
+</div>

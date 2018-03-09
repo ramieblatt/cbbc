@@ -1,6 +1,12 @@
-<h1>Editing Edition</h1>
+<p id="notice"><%= notice %></p>
 
-<%= render 'form', edition: @edition %>
+<div class="card border-primary mb-12" style="max-width: 2000rem;">
+  <div class="card-header">Editing Edition</div>
+  <div class="card-body">
+    <%= link_to 'Show', @edition, class: "btn btn-outline-primary btn-sm" %>
+    <%= link_to 'Back', editions_path, class: "btn btn-outline-primary btn-sm" %>
+    <p/>
+    <%= render 'form', edition: @edition %>
+  </div>
+</div>
 
-<%= link_to 'Show', @edition %> |
-<%= link_to 'Back', editions_path %>

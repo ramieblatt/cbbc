@@ -1,6 +1,7 @@
 <% cols = 5 %>
-<%= paginate cards %>
-<table border=1>
+<b>Total: <%= cards.total_count %></b>
+<%= paginate cards, theme: 'twitter-bootstrap-4' %>
+<table>
   <tbody>
     <tr>
     <% cards.each_with_index do |card, i| %>

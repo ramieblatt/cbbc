@@ -1,25 +1,19 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Editions</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+<div class="card border-primary mb-12" style="max-width: 2000rem;">
+  <div class="card-header">Editions</div>
+  <div class="card-body">
+    <%= link_to 'New Edition', new_edition_path, class: "btn btn-outline-info btn-sm" %>
+    <p/>
     <% @editions.each do |edition| %>
-      <tr>
-        <td>Edition <%= edition.number %>, Name:<%= edition.name %></td>
-        <td><%= link_to 'Show', edition %></td>
-        <td><%= link_to 'Edit', edit_edition_path(edition) %></td>
-      </tr>
+      <div class="card border-primary mb-12" style="max-width: 2000rem;">
+        <div class="card-header">Edition <%= edition.number %>:<%= edition.name %></div>
+        <div class="card-body">
+          <p class="card-text">There are <%= edition.cards.count %> cards in this edition. Status: <%= edition.is_published? ? 'published' : 'open' %></p>
+          <%= link_to 'Show', edition, class: "btn btn-outline-info btn-sm" %>
+          <% unless edition.is_published? %><%= link_to 'Edit', edit_edition_path(edition), class: "btn btn-outline-primary btn-sm" %><% end %>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Edition', new_edition_path %>
+  </div>
+</div>

@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     collection do
       get :prebuilt_search
       post :prebuilt_search
-      post :index
     end
   end
   resources :editions do
@@ -14,7 +13,7 @@ Rails.application.routes.draw do
     end
     member do
       post :create_cards
-      post :remove_all_cards
+      delete :remove_all_cards
     end
   end
   root to: 'players#index'

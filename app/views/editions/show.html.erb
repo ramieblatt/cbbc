@@ -1,21 +1,17 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Edition <%= @edition.number %>, Name:<%= @edition.name %></h1>
-
-<% unless @edition.is_published? %>
-  <%= button_to 'Remove all cards', remove_all_cards_edition_path(@edition), data: { confirm: 'Are you sure? This will remove all existing cards' } %>
-  <p/>
-  <%= button_to 'Generate cards from players', players_path %>
-  <p/>
-<% end %>
-
+<div class="card border-primary mb-12" style="max-width: 2000rem;">
+  <div class="card-header">Edition <%= @edition.number %>, Name:<%= @edition.name %></div>
+  <div class="card-body">
+    <% unless @edition.is_published? %>
+      <%= link_to 'Edit', edit_edition_path(@edition), class: "btn btn-outline-primary btn-sm" %>
+      <%= link_to 'Back', editions_path, class: "btn btn-outline-primary btn-sm" %>
+      <%= link_to 'Generate cards from players', players_path, class: "btn btn-primary btn-sm" %>
+      <%= link_to 'Remove all edition cards', remove_all_cards_edition_path(@edition), class: "btn btn-danger btn-sm", data: { confirm: 'Are you sure? This will remove all existing cards in this edition' }, method: :delete %>
+    <% end %>
+  </div>
+</div>
+<br/>
 <div class="cards">
   <%= render partial: 'cards/cards', locals: { cards: @edition.cards.order("cards.total_cards_in_series ASC, cards.player_id DESC, id ASC").page(params[:page])} %>
-</div>
-
-<p/>
-
-<div class="actions">
-  <%= link_to 'Edit', edit_edition_path(@edition) %> |
-  <%= link_to 'Back', editions_path %>
 </div>

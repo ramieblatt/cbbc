@@ -1,15 +1,15 @@
 <p id="notice"><%= notice %></p>
 
-<h1><%= link_to "#{@player.first_name} #{@player.last_name}", "https://www.baseball-reference.com/players/#{@player.lahman_bbref_id.to_s[0]}/#{@player.lahman_bbref_id}.shtml", target: '_new' %></h1>
-<h5>Full Name: <%= @player.given_name %> <%= @player.last_name %></h5>
-<h4>Position(s): <%= @player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %>, Bats: <%= @player.bats %>, Throws: <%= @player.throws %>, <%= (@player.height/12).floor %>' <%= (@player.height % 12) %>", <%= @player.weight %> lbs</h4>
-<h4>Debut: <%= @player.debut %>, Last Game: <%= @player.final_game %></h4>
-<h4>Born: <%= @player.birthday %> in <%= @player.birth_city %>, <%= @player.birth_state %>, <%= @player.birth_country %></h4>
-
-<div class="cards">
-  <%= render partial: 'cards/cards', locals: { cards: @player.cards.page(params[:page])} %>
-</div>
-
-<div class="actions">
-  <%= link_to 'Back', (request.referer || players_path) %>
+<div class="card border-primary mb-12" style="max-width: 2000rem;">
+  <div class="card-header"><%= link_to "#{@player.first_name} #{@player.last_name}", "https://www.baseball-reference.com/players/#{@player.lahman_bbref_id.to_s[0]}/#{@player.lahman_bbref_id}.shtml", target: '_new' %></div>
+  <div class="card-body">
+    <%= link_to 'Back', (request.referer || players_path), class: "btn btn-outline-primary btn-sm" %>
+    <p/>
+    <p>Full Name: <%= link_to "#{@player.given_name} #{@player.last_name}", "https://www.baseball-reference.com/players/#{@player.lahman_bbref_id.to_s[0]}/#{@player.lahman_bbref_id}.shtml", target: '_new' %>, Position(s): <%= @player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %>, Bats: <%= @player.bats %>, Throws: <%= @player.throws %>, <%= (@player.height.to_i/12).floor %>' <%= (@player.height.to_i % 12) %>", <%= @player.weight %> lbs, Debut: <%= @player.debut %>, Last Game: <%= @player.final_game %>, Born: <%= @player.birthday %> in <%= @player.birth_city %>, <%= @player.birth_state %>, <%= @player.birth_country %></p>
+    <p/>
+    <p>Cards:</p>
+    <div class="cards">
+      <%= render partial: 'cards/cards', locals: { cards: @player.cards.page(params[:page])} %>
+    </div>
+  </div>
 </div>

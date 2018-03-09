@@ -15,6 +15,7 @@ class EditionsController < ApplicationController
   # GET /editions/new
   def new
     @edition = Edition.new
+    @edition.number = Edition.next_edition_number
   end
 
   # GET /editions/1/edit
