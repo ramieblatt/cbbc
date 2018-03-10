@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <div class="card border-primary mb-12" style="max-width: 2000rem;">
-  <div class="card-header"><%= link_to "#{@player.first_name} #{@player.last_name}", "https://www.baseball-reference.com/players/#{@player.lahman_bbref_id.to_s[0]}/#{@player.lahman_bbref_id}.shtml", target: '_new' %></div>
+  <div class="card-header"><%= "#{@player.first_name} #{@player.last_name}" %></div>
   <div class="card-body">
     <%= link_to 'Back', (request.referer || players_path), class: "btn btn-outline-primary btn-sm" %>
     <p/>
