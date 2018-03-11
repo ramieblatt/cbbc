@@ -99,19 +99,7 @@
   </div>
 </div>
 <br/>
-<% if Edition.unpublished.any? and params[:q].present? %>
-  <div class="card border-primary mb-12" style="max-width: 2000rem;">
-    <div class="card-body">
-      <%= simple_form_for :edition, url: create_cards_from_players_editions_path do |ef| %>
-        <div class="form-group">
-          <fieldset>
-          <%= render partial: 'create_cards_from_players_form', locals: { f: ef } %>
-          </fieldset>
-        </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
+<%= render partial: 'create_cards_from_players_form', locals: { query: (params[:q]||{}) } %>
 <br/>
 <b>Total: <%= @players.total_count %></b>
 <%= paginate @players, theme: 'twitter-bootstrap-4' %>
@@ -119,4 +107,3 @@
 <br/>
 <b>Total: <%= @players.total_count %></b>
 <%= paginate @players, theme: 'twitter-bootstrap-4' %>
-

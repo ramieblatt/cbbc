@@ -11,9 +11,11 @@
     <p>Bats: <%= @player.bats %>, Throws: <%= @player.throws %>, <%= (@player.height.to_i/12).floor %>' <%= (@player.height.to_i % 12) %>", <%= @player.weight %> lbs</p>
     <p>Debut: <%= @player.debut %>, Last Game: <%= @player.final_game %>, Born: <%= @player.birthday %> in <%= @player.birth_city %>, <%= @player.birth_state %>, <%= @player.birth_country %></p>
     <p/>
-    <p>Cards:</p>
-    <div class="cards">
-      <%= render partial: 'cards/cards', locals: { cards: @player.cards.page(params[:page])} %>
-    </div>
   </div>
+</div>
+<%= render partial: 'create_cards_from_players_form', locals: { query: {id_eq: 4087} } %>
+<br/>
+<p>Cards:</p>
+<div class="cards">
+  <%= render partial: 'cards/cards', locals: { cards: @player.cards.order(:id).page(params[:page])} %>
 </div>

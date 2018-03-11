@@ -74,7 +74,7 @@ class EditionsController < ApplicationController
     @edition = Edition.find(params[:edition].delete(:id))
 
     if res = @edition.create_cards_from_players(params[:edition])
-      redirect_to @edition, notice: "Edition card set of #{res} was successfully created."
+      redirect_to (request.referer || @edition), notice: "Edition card set of #{res} was successfully created."
     else
       redirect_to @edition, error: "Edition card set could not be created."
     end
