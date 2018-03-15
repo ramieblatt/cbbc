@@ -31,6 +31,7 @@ class Edition < ApplicationRecord
 
   def create_cards_from_players(options)
     return false if is_published?
+    card_count_start = cards.count
     puts "!!!Edition#create_cards_from_players: options[\"q_json\"]: #{options["q_json"].inspect}"
     players_ransack_sql = Player.ransack(JSON.parse(options["q_json"])).result(distinct: true).to_sql
     card_type = options["card_type"] || 'player'
@@ -67,7 +68,8 @@ class Edition < ApplicationRecord
     end
     Edition.connection.execute(sql)
     # puts "!!!Edition#create_cards_from_players: Edition.connection.execute(#{sql})"
-    return false
+    card_count_end = self.reload.cards.count
+    return (card_count_end - card_count_start)
   end
   # def create_cards_from_players(options)
   #   return false if is_published?

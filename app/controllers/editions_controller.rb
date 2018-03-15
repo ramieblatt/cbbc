@@ -66,17 +66,17 @@ class EditionsController < ApplicationController
     if res = @edition.create_cards({total_cards: 1000})
       redirect_to @edition, notice: "Edition card set of #{res} was successfully created."
     else
-      redirect_to @edition, error: "Edition card set could not be created."
+      redirect_to @edition, notice: "Edition card set could not be created."
     end
   end
 
   def create_cards_from_players
     @edition = Edition.find(params[:edition].delete(:id))
-
+    @return_path = params[:return_path]
     if res = @edition.create_cards_from_players(params[:edition])
-      redirect_to (request.referer || @edition), notice: "Edition card set of #{res} was successfully created."
+      redirect_to (@return_path || @edition), notice: "Edition card set of #{res} was successfully created."
     else
-      redirect_to @edition, error: "Edition card set could not be created."
+      redirect_to @edition, notice: "Edition card set could not be created."
     end
   end
 
@@ -84,7 +84,7 @@ class EditionsController < ApplicationController
     if @edition.is_published != true and res = @edition.remove_all_cards!
       redirect_to players_url, notice: "Edition card set was successfully destroyed."
     else
-      redirect_to @edition, error: "Edition card set could not be destroyed."
+      redirect_to @edition, notice: "Edition card set could not be destroyed."
     end
   end
 

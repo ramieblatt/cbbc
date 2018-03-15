@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<%= render partial: '/shared/alerts' %>
 
 <div class="cards">
   <%= render partial: 'cards/cards', locals: { cards: @cards.order("cards.total_cards_in_series ASC, cards.edition_id ASC, cards.player_id DESC, id ASC").page(params[:page])} %>
