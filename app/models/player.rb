@@ -43,7 +43,4 @@ class Player < ApplicationRecord
     PREBUILT_QUERIES.map{|q| q.to_sym}
   end
 
-  def self.position_code_select_options
-    FieldingStat.pluck("distinct position_code").sort_by{|pos_code| pos_code}.map{|pos_code| [pos_code]}
-  end
 end

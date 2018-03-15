@@ -29,7 +29,7 @@
             <thead>
               <tr>
                 <th>
-                  <%= f.label "Name", class: "col-form-label col-form-label-sm" %>
+                  <%= f.label "First Or Last Name", class: "col-form-label col-form-label-sm" %>
                   <%= f.search_field :first_name_or_last_name_or_given_name_cont, class: "form-control-sm" %>
                 </th>
                 <th>
@@ -99,11 +99,10 @@
   </div>
 </div>
 <br/>
-<%= render partial: 'create_cards_from_players_form', locals: { query: (params[:q]||{}), return_path: players_url } %>
+
+<%= render partial: 'create_cards_from_players_form', locals: { query: (params[:q]||{}), return_path: request.path } %>
 <br/>
-<b>Total: <%= @players.total_count %></b>
-<%= paginate @players, theme: 'twitter-bootstrap-4' %>
-<%= render partial: 'players/players' %>
-<br/>
-<b>Total: <%= @players.total_count %></b>
-<%= paginate @players, theme: 'twitter-bootstrap-4' %>
+
+<div id="players">
+  <%= render partial: 'players/players' %>
+</div>

@@ -4,7 +4,12 @@ class CardsController < ApplicationController
   # GET /cards
   # GET /cards.json
   def index
-    @cards = Card.page(params[:page])
+    @q = Card.ransack(params[:q])
+    result = @q.result(distinct: true)
+    if @q.sorts.any?
+      result = result.except(:order).order("#{@q.sorts.first.name} #{@q.sorts.first.dir} NULLS LAST")
+    end
+    @cards = result.includes(:player).includes(:edition).page(params[:page])
   end
 
   # GET /cards/1

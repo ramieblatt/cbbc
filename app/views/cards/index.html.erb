@@ -1,5 +1,141 @@
 <%= render partial: '/shared/alerts' %>
 
-<div class="cards">
-  <%= render partial: 'cards/cards', locals: { cards: @cards.order("cards.total_cards_in_series ASC, cards.edition_id ASC, cards.player_id DESC, id ASC").page(params[:page])} %>
+<div class="card border-primary mb-12" style="max-width: 2000rem;">
+  <div class="card-header">Card Search</div>
+  <div class="card-body">
+    <%= search_form_for @q do |f| %>
+      <div class="form-group">
+        <fieldset>
+          <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <button type="button" class="btn btn-outline-info">Prebuilt Searches</button>
+            <div class="btn-group" role="group">
+              <button id="btnGroupDrop1" type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+              <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <%= link_to "Non-active non-pitchers with 5000 or more PA", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: false, player_with_career_num_ab_greater_than: 5000}), class: "dropdown-item" %>
+                <%= link_to "Non-active pitchers with 1800 or more IP and .520+ win percentage", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: true, player_with_career_num_ips_greater_than: 1800, player_with_career_winning_percentage_greater_than: 0.52}), class: "dropdown-item" %>
+                <%= link_to "Non-active pitchers with 184 or more saves", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: true, player_with_career_num_sv_greater_than: 184}), class: "dropdown-item" %>
+                <%= link_to "Non-active non-pitchers with fewer than 5000 PA in the Hall of Fame", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: false, player_with_career_num_ab_less_than: 5000, player_is_hall_of_famer_eq: true}), class: "dropdown-item" %>
+                <%= link_to "Active Players that have appeared in an All Star Game", cards_path(q: {player_active_eq: true, player_is_all_star_eq: true}), class: "dropdown-item" %>
+                <%= link_to "Negro League Players in the Hall of Fame", cards_path(q: {player_is_nlg_hall_of_famer_eq: true}), class: "dropdown-item" %>
+                <%= link_to "Managers with > 500 wins", cards_path(q: {player_is_manager_eq: true, player_managers_with_career_w_greater_than: 500}), class: "dropdown-item" %>
+              </div>
+            </div>
+          </div>
+          <br/>
+          <br/>
+        </fieldset>
+        <fieldset>
+          <table data-toggle="table">
+            <thead>
+              <tr>
+                <th>
+                  <%= f.label "First Or Last Name", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_first_name_or_player_last_name_or_player_given_name_cont, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.label "BBRef ID", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_lahman_bbref_id_cont, size: 10, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.label "Position(s)", class: "col-form-label col-form-label-sm" %>
+                  <%= f.collection_select :player_fielding_stats_position_code_in, FieldingStat.select("distinct position_code").order(:position_code), :position_code, :position_code, include_blank: true, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.label "Active", class: "col-form-label col-form-label-sm" %>
+                  <%= f.collection_select :player_active_eq, [false, true], :present?, :present?, include_blank: true, class: "custom-select" %>
+                </th>
+                <th>
+                  <%= f.label "PA >", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_with_career_num_ab_greater_than, size: 5, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.label "PA <", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_with_career_num_ab_less_than, size: 5, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.label "IPs >", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_with_career_num_ips_greater_than, size: 4, class: "form-control-sm" %>
+                </th>
+              </tr>
+              <tr>
+                <th>
+                  <%= f.label "Pitching Win % >", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_with_career_winning_percentage_greater_than, size: 4, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.label "Saves >", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_with_career_num_sv_greater_than, size: 4, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.label "Hall of Famer", class: "col-form-label col-form-label-sm" %>
+                  <%= f.collection_select :player_is_hall_of_famer_eq, [false, true], :present?, :present?, include_blank: true, class: "custom-select" %>
+                </th>
+                <th>
+                  <%= f.label "All Star", class: "col-form-label col-form-label-sm" %>
+                  <%= f.collection_select :player_is_all_star_eq, [false, true], :present?, :present?, include_blank: true, class: "custom-select" %>
+                </th>
+                <th>
+                  <%= f.label "Negro League Hall of Fame", class: "col-form-label col-form-label-sm" %>
+                  <%= f.collection_select :player_is_nlg_hall_of_famer_eq, [false, true], :present?, :present?, include_blank: true, class: "custom-select" %>
+                </th>
+                <th>
+                  <%= f.label "Manager Wins >", class: "col-form-label col-form-label-sm" %>
+                  <%= f.search_field :player_managers_with_career_w_greater_than, size: 4, class: "form-control-sm" %>
+                </th>
+                <th>
+                  <%= f.submit "Search", class: "btn btn-primary btn-sm" %>
+                  <%= link_to "Clear", cards_path, class: "btn btn-outline-primary btn-sm" %>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      </div>
+    <% end %>
+  </div>
+</div>
+<br/>
+
+<div class="card border-primary mb-12" style="max-width: 2000rem;">
+  <div class="card-header">Sort By</div>
+  <div class="card-body">
+    <table data-toggle="table">
+      <thead>
+        <tr>
+          <th><%= sort_link(@q, "players.lahman_bbref_id", 'BBRef ID', default_order: :asc) %></th>
+          <th><%= sort_link(@q, "players.last_name", "Last Name") %></th>
+          <th><%= sort_link(@q, "players.bats", "Bats") %></th>
+          <th><%= sort_link(@q, "players.throws", "Throws") %></th>
+          <th><%= sort_link(@q, "players.height", "Height") %></th>
+          <th><%= sort_link(@q, "players.weight", "Weight") %></th>
+          <th><%= sort_link(@q, "players.debut", "Debut") %></th>
+          <th><%= sort_link(@q, "players.final_game", "Final Game") %></th>
+          <th><%= sort_link(@q, "players.birthday", "Birthday") %></th>
+          <th><%= sort_link(@q, "players.tot_g_batter", "G", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_ab_batter", "PA", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_r_batter", "R", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_h_batter", "H", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_hr_batter", "HR", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_rbi_batter", "RBI", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_sb_batter", "SB", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_bb_batter", "BB", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_w_pitcher", "W", default_order: :desc) %></th>
+          <th><%= sort_link(@q, "players.tot_l_pitcher", "L", default_order: :desc) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br/>
+
+<div id="cards">
+  <%= render partial: 'cards/cards', locals: { cards: @cards.order("cards.total_cards_in_series ASC, cards.edition_id ASC, cards.player_id DESC, cards.id ASC").page(params[:page])} %>
 </div>

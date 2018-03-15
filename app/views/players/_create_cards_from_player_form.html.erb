@@ -1,0 +1,10 @@
+<%= f.label "Edition", class: "col-form-label col-form-label-sm" %>
+<%= f.collection_select :id, Edition.unpublished, :id, :name_with_number, class: "custom-select" %>
+<%= f.label "Target Card Type (if it applies)", class: "col-form-label col-form-label-sm" %>
+<%= f.select :card_type, Card::CARD_TYPES, selected: select_card_type_from_search, class: "custom-select" %>
+<%= f.label "Average number of cards per player", class: "col-form-label col-form-label-sm" %>
+<%= f.collection_select :average_num_cards, Card::AVERAGE_NUMBERS_PER_PLAYER, :to_i, :to_s, class: "custom-select" %>
+<%= f.label "Variation cards per player", class: "col-form-label col-form-label-sm" %>
+<%= f.select :num_cards_random_variation, Card::PER_PLAYER_RANDOM_VARIATION.map{|k,v| [k.to_s,v]}, class: "custom-select" %>
+<%= f.hidden_field :q_json, value: (params[:q]||{}).to_json %>
+<%= f.submit "Create Cards From These Players", class: "btn btn-primary btn-sm", data: { confirm: 'Are you sure? This will add cards for this set of players in random amounts with the selected average and random variation per player' } %>

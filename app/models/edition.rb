@@ -35,11 +35,11 @@ class Edition < ApplicationRecord
     puts "!!!Edition#create_cards_from_players: options[\"q_json\"]: #{options["q_json"].inspect}"
     players_ransack_sql = Player.ransack(JSON.parse(options["q_json"])).result(distinct: true).to_sql
     card_type = options["card_type"] || 'player'
-    if (average_num_cards = options["average_num_cards"].to_i) > 1
+    average_num_cards = options["average_num_cards"].to_i
+    # if (average_num_cards) > 1
       players_sql = players_ransack_sql.gsub("SELECT DISTINCT \"players\".*", "SELECT \"players\".\"id\" AS player_id")
       num_cards_random_variation = options["num_cards_random_variation"].to_f
       integral_card_variation = num_cards_random_variation*average_num_cards.to_i
-      (average_num_cards + (2*integral_card_variation*rand() - integral_card_variation)).ceil
       sql = "
       DO $$
       DECLARE
@@ -48,24 +48,36 @@ class Edition < ApplicationRecord
       BEGIN
         ALTER TABLE cards DISABLE TRIGGER card_series_index_update;
         ALTER TABLE cards DISABLE TRIGGER card_total_cards_in_series_update;
+
         FOR player_row IN (#{players_sql}) LOOP
           FOR i IN 1..ceil(random()*2.0*#{integral_card_variation} - #{integral_card_variation} + #{average_num_cards}) LOOP
             INSERT INTO cards (player_id, edition_id, created_at, updated_at, card_type) VALUES (player_row.player_id, #{id}, date(\'#{Date.today}\'), date(\'#{Date.today}\'), \'#{card_type}\');
           END LOOP;
         END LOOP;
+
         ALTER TABLE cards ENABLE TRIGGER card_series_index_update;
         ALTER TABLE cards ENABLE TRIGGER card_total_cards_in_series_update;
+
         INSERT INTO cards (player_id, edition_id, created_at, updated_at, card_type) VALUES (0, 0, date(\'#{Date.today}\'), date(\'#{Date.today}\'), 'remove');
         DELETE FROM cards WHERE card_type='remove';
       END;
       $$;
       "
-    else
-      players_sql = players_ransack_sql.gsub("SELECT DISTINCT \"players\".*", "SELECT \"players\".\"id\" AS player_id, #{id.to_s}, date(\'#{Date.today.to_s}\'), date(\'#{Date.today.to_s}\'), '#{card_type}'")
-      sql = "
-      INSERT INTO cards (player_id, edition_id, created_at, updated_at, card_type) (#{players_sql});
-      "
-    end
+    # else
+    #   players_sql = players_ransack_sql.gsub("SELECT DISTINCT \"players\".*", "SELECT \"players\".\"id\" AS player_id, #{id.to_s}, date(\'#{Date.today.to_s}\'), date(\'#{Date.today.to_s}\'), '#{card_type}'")
+    #   sql = "
+    #   ALTER TABLE cards DISABLE TRIGGER card_series_index_update;
+    #   ALTER TABLE cards DISABLE TRIGGER card_total_cards_in_series_update;
+
+    #   INSERT INTO cards (player_id, edition_id, created_at, updated_at, card_type) (#{players_sql});
+
+    #   ALTER TABLE cards ENABLE TRIGGER card_series_index_update;
+    #   ALTER TABLE cards ENABLE TRIGGER card_total_cards_in_series_update;
+
+    #   INSERT INTO cards (player_id, edition_id, created_at, updated_at, card_type) VALUES (0, 0, date(\'#{Date.today}\'), date(\'#{Date.today}\'), 'remove');
+    #   DELETE FROM cards WHERE card_type='remove';
+    #   "
+    # end
     Edition.connection.execute(sql)
     # puts "!!!Edition#create_cards_from_players: Edition.connection.execute(#{sql})"
     card_count_end = self.reload.cards.count
