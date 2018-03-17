@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180309154001) do
+ActiveRecord::Schema.define(version: 20180317001624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -776,6 +776,63 @@ ActiveRecord::Schema.define(version: 20180309154001) do
     t.index ["lahman_bbref_id"], name: "index_players_on_lahman_bbref_id"
     t.index ["lahman_player_id"], name: "index_players_on_lahman_player_id"
     t.index ["lahman_retro_id"], name: "index_players_on_lahman_retro_id"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.integer "year_id", null: false
+    t.string "league_code", null: false
+    t.string "team_code", null: false
+    t.string "franchise_code", null: false
+    t.string "division_code"
+    t.boolean "div_winner", default: false, null: false
+    t.boolean "wc_winner", default: false, null: false
+    t.boolean "lg_winner", default: false, null: false
+    t.boolean "ws_winner", default: false, null: false
+    t.integer "rank"
+    t.integer "num_g"
+    t.integer "num_gh"
+    t.integer "num_w"
+    t.integer "num_l"
+    t.integer "num_r"
+    t.integer "num_ab"
+    t.integer "num_h"
+    t.integer "num_2b"
+    t.integer "num_3b"
+    t.integer "num_hr"
+    t.integer "num_bb"
+    t.integer "num_so"
+    t.integer "num_sb"
+    t.integer "num_cs"
+    t.integer "num_hbp"
+    t.integer "num_sf"
+    t.integer "num_ra"
+    t.integer "num_er"
+    t.decimal "era", precision: 5, scale: 2
+    t.integer "num_cg"
+    t.integer "num_sho"
+    t.integer "num_sv"
+    t.integer "num_ipouts"
+    t.integer "num_ha"
+    t.integer "num_hra"
+    t.integer "num_bba"
+    t.integer "num_soa"
+    t.integer "num_e"
+    t.integer "num_dp"
+    t.decimal "fp", precision: 4, scale: 3
+    t.string "name"
+    t.string "park"
+    t.integer "attendance"
+    t.integer "bpf"
+    t.integer "ppf"
+    t.string "lahman_bbref_id"
+    t.string "lahman_retro_id"
+    t.index ["division_code"], name: "index_teams_on_division_code"
+    t.index ["franchise_code"], name: "index_teams_on_franchise_code"
+    t.index ["lahman_bbref_id"], name: "index_teams_on_lahman_bbref_id"
+    t.index ["lahman_retro_id"], name: "index_teams_on_lahman_retro_id"
+    t.index ["league_code"], name: "index_teams_on_league_code"
+    t.index ["team_code"], name: "index_teams_on_team_code"
+    t.index ["year_id"], name: "index_teams_on_year_id"
   end
 
 end

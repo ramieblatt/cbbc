@@ -13,9 +13,52 @@
     <p/>
   </div>
 </div>
-<%= render partial: 'create_cards_from_players_form', locals: { query: {id_eq: @player.id}, return_path: player_url(@player) } %>
 <br/>
-<p>Cards:</p>
-<div class="cards">
-  <%= render partial: 'cards/cards', locals: { cards: @player.cards.order(:id).page(params[:page])} %>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active show" data-toggle="tab" href="#cards">Cards</a>
+  </li>
+  <% if @player.batting_stats.any? %>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#batting_stats">Batting Stats</a>
+    </li>
+  <% end %>
+  <% if @player.pitching_stats.any? %>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#pitching_stats">Pitching Stats</a>
+    </li>
+  <% end %>
+  <% if @player.fielding_stats.any? %>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#fielding_stats">Fielding Stats</a>
+    </li>
+  <% end %>
+  <% if @player.managers.any? %>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#managers">Managing Stats</a>
+    </li>
+  <% end %>
+</ul>
+<div id="myTabContent" class="tab-content">
+  <br/>
+  <div class="tab-pane fade active show" id="cards">
+    <%= render partial: 'create_cards_from_players_form', locals: { query: {id_eq: @player.id}, return_path: player_url(@player) } %>
+    <br/>
+    <p>Cards:</p>
+    <div class="cards">
+      <%= render partial: 'cards/cards', locals: { cards: @player.cards.order(:id).page(params[:page])} %>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="batting_stats">
+    <p>Batting Stats go here.</p>
+  </div>
+  <div class="tab-pane fade" id="pitching_stats">
+    <p>Pitching Stats go here.</p>
+  </div>
+  <div class="tab-pane fade" id="fielding_stats">
+    <p>Fielding Stats go here.</p>
+  </div>
+  <div class="tab-pane fade" id="managers">
+    <p>Managing Stats go here.</p>
+  </div>
 </div>

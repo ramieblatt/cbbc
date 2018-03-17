@@ -7,4 +7,4 @@
 <%= f.label "Variation cards per player", class: "col-form-label col-form-label-sm" %>
 <%= f.select :num_cards_random_variation, Card::PER_PLAYER_RANDOM_VARIATION.map{|k,v| [k.to_s,v]}, class: "custom-select" %>
 <%= f.hidden_field :q_json, value: (params[:q]||{}).to_json %>
-<%= f.submit "Create Cards From These Players", class: "btn btn-primary btn-sm", data: { confirm: 'Are you sure? This will add cards for this set of players in random amounts with the selected average and random variation per player' } %>
+<%= f.submit "Create Cards From This Player", class: "btn btn-primary btn-sm", data: { confirm: 'Are you sure? This will add cards for this set of players in random amounts with the selected average and random variation per player' } %>
