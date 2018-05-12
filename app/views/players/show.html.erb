@@ -5,6 +5,7 @@
   <div class="card-body">
     <%= link_to 'Back', (request.referer || players_path), class: "btn btn-outline-primary btn-sm" %>
     <p/>
+    <p><%= player_images(@player) %></p>
     <p>BaseballReference.com ID: <%= player_links_to_bbref(@player, separator=" | ") %></p>
     <p>Full Name: <%= @player.given_name %> <%= @player.last_name %></p>
     <p>Position(s): <%= @player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %></p>
