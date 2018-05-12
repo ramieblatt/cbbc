@@ -4,6 +4,7 @@
 <table data-toggle="table">
   <thead>
     <tr>
+      <th></th>
       <th><%= sort_link(@q, :lahman_bbref_id, 'BBRef ID', default_order: :asc) %></th>
       <th>First</th>
       <th><%= sort_link(@q, :last_name) %></th>
@@ -23,6 +24,9 @@
   <tbody>
     <% @players.each do |player| %>
       <tr>
+        <td>
+          <%= player_images(player) %>
+        </td>
         <td>
           <%= player_links_to_bbref(player) %>
         </td>

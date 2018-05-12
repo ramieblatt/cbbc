@@ -7,6 +7,7 @@ class Player < ApplicationRecord
   has_many :hall_of_fame_appearances, inverse_of: :player
   has_many :managers, inverse_of: :player
   has_many :cards, inverse_of: :player
+  has_many :player_images, inverse_of: :player
   include ActiveModel::Serialization
   paginates_per 20
   DATABASE_EDITION_YEAR = "2016"
@@ -36,11 +37,41 @@ class Player < ApplicationRecord
   scope :hall_of_famers, -> { where(is_hall_of_famer: true) }
   scope :all_stars, -> { where(is_all_star: true) }
   scope :managers_with_career_w_greater_than, -> (tot_w) { where(is_manager: true).where("tot_w_manager > ?", tot_w.to_i).order("tot_w_manager DESC NULLS LAST") }
+  scope :managers, -> { where(is_manager: true) }
   scope :top_managers, -> (lim) { where(is_manager: true).limit(lim).order("tot_w_manager DESC NULLS LAST") }
   scope :negro_league_hall_of_famers, -> { where(is_nlg_hall_of_famer: true) }
 
   def self.ransackable_scopes(auth_object = nil)
     PREBUILT_QUERIES.map{|q| q.to_sym}
   end
+
+  def scrape_images
+    role_prefixes = []
+    bbref_urls = []
+    if self.is_mlbp? or (!self.is_manager?)
+      bbref_urls << "https://www.baseball-reference.com/#{self.is_mlbp? ? 'players/'+self.lahman_bbref_id.to_s[0] : 'nonmlbpa'}/#{self.lahman_bbref_id}.shtml"
+      role_prefixes << self.is_mlbp? ? 'players' : 'nonmlbpa'
+    end
+    if self.is_manager?
+      bbref_urls << "https://www.baseball-reference.com/managers/#{self.lahman_bbref_id}.shtml"
+      role_prefixes << 'managers'
+    end
+    bbref_urls.each_with_index do |bbref_url, i|
+      role_prefix = role_prefixes[i]
+      Rails.logger.info "scrape_images_for: #{self.lahman_bbref_id}, role_prefix: #{role_prefix}, bbref_url: #{bbref_url}"
+      image_urls = Nokogiri::HTML(open(bbref_url)).css('.media-item img').map{|e| e['src']}
+      image_urls.each do |img_url|
+        Rails.logger.info "scrape_images_for: image_url: #{img_url}"
+        public_url = "www.crypto-baseball-cards.com/images/#{self.lahman_bbref_id}.jpg"
+        unless PlayerImage.where(player_id: self.id).where(lahman_bbref_id: self.lahman_bbref_id).where(bbref_url: img_url).where(public_url: public_url).first
+          file_path = File.join('public', 'images', "#{self.lahman_bbref_id}.jpg")
+          File.open(file_path, 'wb'){ |f| f.write(open(img_url).read) }
+          PlayerImage.create(player_id: self.id, lahman_bbref_id: self.lahman_bbref_id, bbref_url: img_url, role_prefix: role_prefix, public_url: public_url)
+        end
+      end
+    end
+  end
+
+
 
 end

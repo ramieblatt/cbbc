@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180317001624) do
+ActiveRecord::Schema.define(version: 20180510192339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -711,6 +711,17 @@ ActiveRecord::Schema.define(version: 20180317001624) do
     t.index ["stint"], name: "index_pitching_stats_on_stint"
     t.index ["team_code"], name: "index_pitching_stats_on_team_code"
     t.index ["year_id"], name: "index_pitching_stats_on_year_id"
+  end
+
+  create_table "player_images", force: :cascade do |t|
+    t.integer "player_id"
+    t.string "lahman_bbref_id"
+    t.string "bbref_url"
+    t.string "public_url"
+    t.string "role_prefix"
+    t.index ["lahman_bbref_id"], name: "index_player_images_on_lahman_bbref_id"
+    t.index ["player_id"], name: "index_player_images_on_player_id"
+    t.index ["role_prefix"], name: "index_player_images_on_role_prefix"
   end
 
   create_table "players", force: :cascade do |t|

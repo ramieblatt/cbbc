@@ -14,6 +14,14 @@ module PlayersHelper
     return raw(res)
   end
 
+  def player_images(player, num=nil, sep="<br/>")
+    res = ""
+    PlayerImage.where(player_id: player.id).limit(num || 100).each do |player_image|
+      res << "<img src='#{player_image.bbref_url}' alt='#{player.given_name} #{player.last_name}' width=50 height=75/>"
+    end
+    return raw(res)
+  end
+
   def select_card_type_from_search
     res = "player"
     if params["q"]

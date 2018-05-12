@@ -2,6 +2,7 @@ class Card < ApplicationRecord
   belongs_to :player, inverse_of: :cards
   belongs_to :edition, inverse_of: :cards
   belongs_to :pack, inverse_of: :cards, optional: true
+  has_many :player_images, through: :player
   include ActiveModel::Serialization
   paginates_per 20
   CARD_TYPES = ["player", "pitcher", "manager"]
