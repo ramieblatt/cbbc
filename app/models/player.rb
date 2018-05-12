@@ -59,20 +59,21 @@ class Player < ApplicationRecord
     bbref_urls.each_with_index do |bbref_url, i|
       role_prefix = role_prefixes[i]
       Rails.logger.info "scrape_images_for: #{self.lahman_bbref_id}, role_prefix: #{role_prefix}, bbref_url: #{bbref_url}"
-      image_urls = Nokogiri::HTML(open(bbref_url)).css('.media-item img').map{|e| e['src']}
-      image_urls.each do |img_url|
-        Rails.logger.info "scrape_images_for: image_url: #{img_url}"
-        public_url = "www.crypto-baseball-cards.com/images/#{self.lahman_bbref_id}.jpg"
-        unless PlayerImage.where(player_id: self.id).where(lahman_bbref_id: self.lahman_bbref_id).where(bbref_url: img_url).where(public_url: public_url).first
-          begin
+      begin
+        image_urls = Nokogiri::HTML(open(bbref_url)).css('.media-item img').map{|e| e['src']}
+        image_urls.each do |img_url|
+          Rails.logger.info "scrape_images_for: image_url: #{img_url}"
+          public_url = "www.crypto-baseball-cards.com/images/#{self.lahman_bbref_id}.jpg"
+          unless PlayerImage.where(player_id: self.id).where(lahman_bbref_id: self.lahman_bbref_id).where(bbref_url: img_url).where(public_url: public_url).first
             file_path = File.join('public', 'images', "#{self.lahman_bbref_id}.jpg")
             File.open(file_path, 'wb'){ |f| f.write(open(img_url).read) }
             PlayerImage.create(player_id: self.id, lahman_bbref_id: self.lahman_bbref_id, bbref_url: img_url, role_prefix: role_prefix, public_url: public_url)
             self.has_images = true
             self.save
-          rescue
           end
         end
+      rescue Exception => exc
+        return false
       end
     end
   end
