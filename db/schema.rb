@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180510192339) do
+ActiveRecord::Schema.define(version: 20180512050119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -784,6 +784,7 @@ ActiveRecord::Schema.define(version: 20180510192339) do
     t.integer "tot_w_manager"
     t.integer "tot_l_manager"
     t.boolean "active", default: false, null: false
+    t.boolean "has_images", default: false, null: false
     t.index ["lahman_bbref_id"], name: "index_players_on_lahman_bbref_id"
     t.index ["lahman_player_id"], name: "index_players_on_lahman_player_id"
     t.index ["lahman_retro_id"], name: "index_players_on_lahman_retro_id"

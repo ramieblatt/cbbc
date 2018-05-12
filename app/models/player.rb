@@ -50,7 +50,7 @@ class Player < ApplicationRecord
     bbref_urls = []
     if self.is_mlbp? or (!self.is_manager?)
       bbref_urls << "https://www.baseball-reference.com/#{self.is_mlbp? ? 'players/'+self.lahman_bbref_id.to_s[0] : 'nonmlbpa'}/#{self.lahman_bbref_id}.shtml"
-      role_prefixes << self.is_mlbp? ? 'players' : 'nonmlbpa'
+      role_prefixes << (self.is_mlbp? ? 'players' : 'nonmlbpa')
     end
     if self.is_manager?
       bbref_urls << "https://www.baseball-reference.com/managers/#{self.lahman_bbref_id}.shtml"
@@ -64,9 +64,14 @@ class Player < ApplicationRecord
         Rails.logger.info "scrape_images_for: image_url: #{img_url}"
         public_url = "www.crypto-baseball-cards.com/images/#{self.lahman_bbref_id}.jpg"
         unless PlayerImage.where(player_id: self.id).where(lahman_bbref_id: self.lahman_bbref_id).where(bbref_url: img_url).where(public_url: public_url).first
-          file_path = File.join('public', 'images', "#{self.lahman_bbref_id}.jpg")
-          File.open(file_path, 'wb'){ |f| f.write(open(img_url).read) }
-          PlayerImage.create(player_id: self.id, lahman_bbref_id: self.lahman_bbref_id, bbref_url: img_url, role_prefix: role_prefix, public_url: public_url)
+          begin
+            file_path = File.join('public', 'images', "#{self.lahman_bbref_id}.jpg")
+            File.open(file_path, 'wb'){ |f| f.write(open(img_url).read) }
+            PlayerImage.create(player_id: self.id, lahman_bbref_id: self.lahman_bbref_id, bbref_url: img_url, role_prefix: role_prefix, public_url: public_url)
+            self.has_images = true
+            self.save
+          rescue
+          end
         end
       end
     end
