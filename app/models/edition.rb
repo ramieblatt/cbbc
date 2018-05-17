@@ -122,9 +122,18 @@ class Edition < ApplicationRecord
 
   def remove_all_cards!
     if is_published != true
+      sql = "
+        ALTER TABLE cards DISABLE TRIGGER card_series_index_update;
+        ALTER TABLE cards DISABLE TRIGGER card_total_cards_in_series_update;
+      "
+      Edition.connection.execute(sql)
       Card.where(edition_id: id).delete_all
+      sql = "
+        ALTER TABLE cards ENABLE TRIGGER card_series_index_update;
+        ALTER TABLE cards ENABLE TRIGGER card_total_cards_in_series_update;
+      "
+      Edition.connection.execute(sql)
     end
   end
-
 
 end

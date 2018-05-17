@@ -11,6 +11,9 @@
             <div class="btn-group" role="group">
               <button id="btnGroupDrop1" type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+                <% Edition.unpublished.each do |ed| %>
+                  <%= link_to ed.name_with_number, cards_path(q: {edition_id_eq: ed.id}), class: "dropdown-item" %>
+                <% end %>
                 <%= link_to "Non-active non-pitchers with 5000 or more PA", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: false, player_with_career_num_ab_greater_than: 5000}), class: "dropdown-item" %>
                 <%= link_to "Non-active pitchers with 1800 or more IP and .520+ win percentage", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: true, player_with_career_num_ips_greater_than: 1800, player_with_career_winning_percentage_greater_than: 0.52}), class: "dropdown-item" %>
                 <%= link_to "Non-active pitchers with 184 or more saves", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: true, player_with_career_num_sv_greater_than: 184}), class: "dropdown-item" %>
@@ -28,6 +31,10 @@
           <table data-toggle="table">
             <thead>
               <tr>
+                <th>
+                  <%= f.label "Edition", class: "col-form-label col-form-label-sm" %>
+                  <%= f.collection_select :edition_id_eq, Edition.unpublished, :id, :name_with_number, include_blank: true, class: "custom-select" %>
+                </th>
                 <th>
                   <%= f.label "First Or Last Name", class: "col-form-label col-form-label-sm" %>
                   <%= f.search_field :player_first_name_or_player_last_name_or_player_given_name_cont, class: "form-control-sm" %>
@@ -82,7 +89,7 @@
                   <%= f.label "Manager Wins >", class: "col-form-label col-form-label-sm" %>
                   <%= f.search_field :player_managers_with_career_w_greater_than, size: 4, class: "form-control-sm" %>
                 </th>
-                <th>
+                <th colspan=2>
                   <%= f.submit "Search", class: "btn btn-primary btn-sm" %>
                   <%= link_to "Clear", cards_path, class: "btn btn-outline-primary btn-sm" %>
                 </th>
@@ -106,6 +113,8 @@
     <table data-toggle="table">
       <thead>
         <tr>
+          <th><%= sort_link(@q, "cards.edition_id", 'Edition', default_order: :asc) %></th>
+          <th><%= sort_link(@q, "cards.total_cards_in_series", 'Rarity', default_order: :asc) %></th>
           <th><%= sort_link(@q, "players.lahman_bbref_id", 'BBRef ID', default_order: :asc) %></th>
           <th><%= sort_link(@q, "players.last_name", "Last Name") %></th>
           <th><%= sort_link(@q, "players.bats", "Bats") %></th>
