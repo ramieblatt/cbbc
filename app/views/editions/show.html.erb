@@ -6,7 +6,7 @@
     <% unless @edition.is_published? %>
       <%= link_to 'Edit', edit_edition_path(@edition), class: "btn btn-outline-primary btn-sm" %>
       <%= link_to 'Back', editions_path, class: "btn btn-outline-primary btn-sm" %>
-      <%= link_to 'Generate cards from players', players_path, class: "btn btn-primary btn-sm" %>
+      <%= link_to 'Generate cards from players', players_path(edition_id: @edition.id), class: "btn btn-primary btn-sm" %>
       <%= link_to 'Remove all edition cards', remove_all_cards_edition_path(@edition), class: "btn btn-danger btn-sm", data: { confirm: 'Are you sure? This will remove all existing cards in this edition' }, method: :delete %>
     <% end %>
   </div>

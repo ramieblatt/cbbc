@@ -5,7 +5,7 @@
         <div class="form-group">
           <fieldset>
             <%= ef.label "Edition", class: "col-form-label col-form-label-sm" %>
-            <%= ef.collection_select :id, Edition.unpublished, :id, :name_with_number, class: "custom-select" %>
+            <%= ef.collection_select :id, Edition.unpublished, :id, :name_with_number, {:selected => @edition_id}, class: "custom-select" %>
             <%= ef.label "Target Card Type (if it applies)", class: "col-form-label col-form-label-sm" %>
             <%= ef.select :card_type, Card::CARD_TYPES, selected: select_card_type_from_search, class: "custom-select" %>
             <%= ef.label "Average number of cards per player", class: "col-form-label col-form-label-sm" %>

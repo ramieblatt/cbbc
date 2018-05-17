@@ -30,8 +30,8 @@
         <td>
           <%= player_links_to_bbref(player) %>
         </td>
-        <td><%= link_to player.first_name, player_url(player.id) %></td>
-        <td><%= link_to player.last_name, player_url(player.id) %></td>
+        <td><%= link_to player.first_name, player_url(player.id, edition_id: @edition_id) %></td>
+        <td><%= link_to player.last_name, player_url(player.id, edition_id: @edition_id) %></td>
         <td><%= player.fielding_stats.map{|fs| fs.position_code}.uniq.join(', ') %></td>
         <td><%= player.bats %></td>
         <td><%= player.throws %></td>

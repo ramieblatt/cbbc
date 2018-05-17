@@ -4,6 +4,7 @@
   <div class="card-header">Players Search</div>
   <div class="card-body">
     <%= search_form_for @q do |f| %>
+      <%= hidden_field_tag :edition_id, @edition_id %>
       <div class="form-group">
         <fieldset>
           <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -11,13 +12,13 @@
             <div class="btn-group" role="group">
               <button id="btnGroupDrop1" type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
-                <%= link_to "Non-active non-pitchers with 5000 or more PA", players_path(q: {active_eq: false, is_pitcher_eq: false, with_career_num_ab_greater_than: 5000}), class: "dropdown-item" %>
-                <%= link_to "Non-active pitchers with 1800 or more IP and .520+ win percentage", players_path(q: {active_eq: false, is_pitcher_eq: true, with_career_num_ips_greater_than: 1800, with_career_winning_percentage_greater_than: 0.52}), class: "dropdown-item" %>
-                <%= link_to "Non-active pitchers with 184 or more saves", players_path(q: {active_eq: false, is_pitcher_eq: true, with_career_num_sv_greater_than: 184}), class: "dropdown-item" %>
-                <%= link_to "Non-active non-pitchers with fewer than 5000 PA in the Hall of Fame", players_path(q: {active_eq: false, is_pitcher_eq: false, with_career_num_ab_less_than: 5000, is_hall_of_famer_eq: true}), class: "dropdown-item" %>
-                <%= link_to "Active Players that have appeared in an All Star Game", players_path(q: {active_eq: true, is_all_star_eq: true}), class: "dropdown-item" %>
-                <%= link_to "Negro League Players in the Hall of Fame", players_path(q: {is_nlg_hall_of_famer_eq: true}), class: "dropdown-item" %>
-                <%= link_to "Managers with > 500 wins", players_path(q: {is_manager_eq: true, managers_with_career_w_greater_than: 500}), class: "dropdown-item" %>
+                <%= link_to "Non-active non-pitchers with 5000 or more PA", players_path(edition_id: @edition_id, q: {active_eq: false, is_pitcher_eq: false, with_career_num_ab_greater_than: 5000}), class: "dropdown-item" %>
+                <%= link_to "Non-active pitchers with 1800 or more IP and .520+ win percentage", players_path(edition_id: @edition_id, q: {active_eq: false, is_pitcher_eq: true, with_career_num_ips_greater_than: 1800, with_career_winning_percentage_greater_than: 0.52}), class: "dropdown-item" %>
+                <%= link_to "Non-active pitchers with 184 or more saves", players_path(edition_id: @edition_id, q: {active_eq: false, is_pitcher_eq: true, with_career_num_sv_greater_than: 184}), class: "dropdown-item" %>
+                <%= link_to "Non-active non-pitchers with fewer than 5000 PA in the Hall of Fame", players_path(edition_id: @edition_id, q: {active_eq: false, is_pitcher_eq: false, with_career_num_ab_less_than: 5000, is_hall_of_famer_eq: true}), class: "dropdown-item" %>
+                <%= link_to "Active Players that have appeared in an All Star Game", players_path(edition_id: @edition_id, q: {active_eq: true, is_all_star_eq: true}), class: "dropdown-item" %>
+                <%= link_to "Negro League Players in the Hall of Fame", players_path(edition_id: @edition_id, q: {is_nlg_hall_of_famer_eq: true}), class: "dropdown-item" %>
+                <%= link_to "Managers with > 500 wins", players_path(edition_id: @edition_id, q: {is_manager_eq: true, managers_with_career_w_greater_than: 500}), class: "dropdown-item" %>
               </div>
             </div>
           </div>
