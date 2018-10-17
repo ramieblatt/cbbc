@@ -1,4 +1,6 @@
 class EditionsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :require_admin
   before_action :set_edition, only: [:show, :edit, :update, :destroy, :create_cards, :remove_all_cards]
 
   # GET /editions

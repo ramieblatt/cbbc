@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180512050119) do
+ActiveRecord::Schema.define(version: 20181017230914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,17 @@ ActiveRecord::Schema.define(version: 20180512050119) do
     t.index ["league_code"], name: "index_appearances_on_league_code"
     t.index ["team_code"], name: "index_appearances_on_team_code"
     t.index ["year_id"], name: "index_appearances_on_year_id"
+  end
+
+  create_table "authentications", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_authentications_on_account_id"
+    t.index ["provider"], name: "index_authentications_on_provider"
+    t.index ["uid"], name: "index_authentications_on_uid"
   end
 
   create_table "batting_stats", force: :cascade do |t|
@@ -845,6 +856,20 @@ ActiveRecord::Schema.define(version: 20180512050119) do
     t.index ["league_code"], name: "index_teams_on_league_code"
     t.index ["team_code"], name: "index_teams_on_team_code"
     t.index ["year_id"], name: "index_teams_on_year_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_admin", default: false, null: false
+    t.string "wallet_address"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
 end

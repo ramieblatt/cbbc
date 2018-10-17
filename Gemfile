@@ -47,9 +47,10 @@ gem 'ransack'
 # PostGres gems end
 
 # Ethereum/IPFS gems start
+gem 'eth'
 gem 'ipfs-api', '~> 0.3.0'
 # gem 'ethereum.rb'
-gem 'ethereum.rb', git: 'https://github.com/ramieblatt/ethereum.rb' # using fork because some rake tasks broken with later versions of parity
+gem 'ethereum.rb' #, git: 'https://github.com/ramieblatt/ethereum.rb' # using fork because some rake tasks broken with later versions of parity
 gem 'web3-eth'
 # Ethereum gems end
 
@@ -70,7 +71,9 @@ gem 'jquery-inputmask-rails'
 gem 'jquery-fileupload-rails'
 gem 'font-awesome-rails'
 
+# authentication
 gem 'lockup'
+gem 'devise'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
