@@ -53,4 +53,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  BLOCKCHAIN_URL = 'HTTP://127.0.0.1:7545' # Ganache
+  TRUFFLE_PATH = '/Users/ramie/cbbc_smart_contracts/cbbc-zos' # local development path
 end

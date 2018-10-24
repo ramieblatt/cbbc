@@ -9,6 +9,9 @@ class CardsController < ApplicationController
     if @q.sorts.any?
       result = result.except(:order).order("#{@q.sorts.first.name} #{@q.sorts.first.dir} NULLS LAST")
     end
+    unless current_user and current_user.is_admin?
+      result = result.joins(:edition).where("editions.is_published IS TRUE")
+    end
     @cards = result.includes(:player).includes(:edition).page(params[:page])
   end
 

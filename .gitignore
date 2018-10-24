@@ -27,3 +27,6 @@
 
 # Ignore images.
 /public/images
+
+# Ignore encrypted secrets key file.
+config/secrets.yml.key

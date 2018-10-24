@@ -1,7 +1,7 @@
 class Edition < ApplicationRecord
   has_many :cards, inverse_of: :edition, dependent: :destroy
 
-  validates_presence_of :number
+  validates_presence_of :number, if: :is_published?
   validates_uniqueness_of :number
   validates_presence_of :name
   validates_uniqueness_of :name
@@ -10,10 +10,10 @@ class Edition < ApplicationRecord
   scope :unpublished, -> { where(is_published: false) }
 
   def self.next_edition_number
-    Edition.count
+    ETHEREUM_CONTRACT.call.number_of_editions()
   end
 
-  def self.select_options(current_user=nil)
+  def self.selectable(current_user=nil)
     if current_user and current_user.is_admin
       Edition.all
     else
