@@ -11,7 +11,7 @@
             <div class="btn-group" role="group">
               <button id="btnGroupDrop1" type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
               <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
-                <% Edition.unpublished.each do |ed| %>
+                <% Edition.select_options(current_user).each do |ed| %>
                   <%= link_to ed.name_with_number, cards_path(q: {edition_id_eq: ed.id}), class: "dropdown-item" %>
                 <% end %>
                 <%= link_to "Non-active non-pitchers with 5000 or more PA", cards_path(q: {player_active_eq: false, player_is_pitcher_eq: false, player_with_career_num_ab_greater_than: 5000}), class: "dropdown-item" %>

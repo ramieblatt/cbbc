@@ -21,17 +21,10 @@ class CardsController < ApplicationController
     end
   end
 
-  # GET /cards/1
-  def show_by_token_id
-    @card = Card.find_by_token_id(params[:token_id])
-    render json: @card, status: 200 if @card
-    render json: '', status: 404 unless @card
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_card
-      @card = Card.find(params[:id])
+      @card = Card.find_by_token_id(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

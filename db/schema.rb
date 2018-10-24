@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181024161140) do
+ActiveRecord::Schema.define(version: 20181024210400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,7 +107,6 @@ ActiveRecord::Schema.define(version: 20181024161140) do
   create_table "cards", force: :cascade do |t|
     t.integer "player_id", null: false
     t.integer "edition_id", null: false
-    t.integer "pack_id"
     t.date "minted_at"
     t.integer "series_index", default: 1, null: false
     t.integer "total_cards_in_series", default: 1, null: false
@@ -117,7 +116,6 @@ ActiveRecord::Schema.define(version: 20181024161140) do
     t.integer "token_id"
     t.index ["edition_id"], name: "index_cards_on_edition_id"
     t.index ["minted_at"], name: "index_cards_on_minted_at"
-    t.index ["pack_id"], name: "index_cards_on_pack_id"
     t.index ["player_id"], name: "index_cards_on_player_id"
     t.index ["series_index"], name: "index_cards_on_series_index"
   end
@@ -675,15 +673,6 @@ ActiveRecord::Schema.define(version: 20181024161140) do
     t.index ["league_code"], name: "index_managers_on_league_code"
     t.index ["team_code"], name: "index_managers_on_team_code"
     t.index ["year_id"], name: "index_managers_on_year_id"
-  end
-
-  create_table "packs", force: :cascade do |t|
-    t.integer "edition_id"
-    t.date "minted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["edition_id"], name: "index_packs_on_edition_id"
-    t.index ["minted_at"], name: "index_packs_on_minted_at"
   end
 
   create_table "pitching_stats", force: :cascade do |t|

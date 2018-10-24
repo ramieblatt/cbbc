@@ -1,6 +1,5 @@
 class Edition < ApplicationRecord
   has_many :cards, inverse_of: :edition, dependent: :destroy
-  has_many :packs, inverse_of: :edition, dependent: :destroy
 
   validates_presence_of :number
   validates_uniqueness_of :number
@@ -12,6 +11,14 @@ class Edition < ApplicationRecord
 
   def self.next_edition_number
     Edition.count
+  end
+
+  def self.select_options(current_user=nil)
+    if current_user and current_user.is_admin
+      Edition.all
+    else
+      Edition.published
+    end
   end
 
   def name_with_number

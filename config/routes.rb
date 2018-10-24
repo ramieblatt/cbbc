@@ -20,10 +20,10 @@ Rails.application.routes.draw do
     end
     root to: 'players#index'
   end
-  constraints(subdomain: 'api') do
-    scope :cards, format: :json do
-      scope ':token_id' do
-        get '/', to: 'cards#show_by_token_id'
+  constraints(subdomain: 'api', format: 'json') do
+    scope :cards do
+      scope ':id' do
+        get '/', to: 'cards#show', :defaults => { :format => :json }
       end
     end
   end
