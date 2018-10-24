@@ -32,4 +32,15 @@ class Card < ApplicationRecord
     PREBUILT_QUERIES.map{|q| q.to_sym}
   end
 
+  def tags
+    res = []
+    res << card_type
+    res << 'manager' if player.is_manager?
+    res << 'pitcher' if player.is_pitcher?
+    res << 'hall of famer' if player.is_hall_of_famer?
+    res << 'negro leage hall of famer' if player.is_nlg_hall_of_famer?
+    res << 'all star' if player.is_all_star?
+    res.compact.uniq
+  end
+
 end

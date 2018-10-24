@@ -20,6 +20,13 @@ Rails.application.routes.draw do
     end
     root to: 'players#index'
   end
+  constraints(subdomain: 'api') do
+    scope :cards, format: :json do
+      scope ':token_id' do
+        get '/', to: 'cards#show_by_token_id'
+      end
+    end
+  end
   constraints( ->(request) { request.subdomain.blank? or request.subdomain =="www" }) do
     resources :cards
     root to: 'cards#index'

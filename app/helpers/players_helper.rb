@@ -22,6 +22,11 @@ module PlayersHelper
     return raw(res)
   end
 
+  def player_image_main_url(player)
+    player_image = PlayerImage.where(player_id: player.id).first
+    return raw("#{player_image.bbref_url}")
+  end
+
   def select_card_type_from_search
     res = "player"
     if params["q"]
