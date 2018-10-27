@@ -3,11 +3,14 @@
 <div class="card border-primary mb-12" style="max-width: 2000rem;">
   <div class="card-header">Edition <%= @edition.number %>, Name:<%= @edition.name %></div>
   <div class="card-body">
-    <% unless @edition.is_published? %>
+    <% if @edition.is_published? %>
+      <%= link_to 'Mint 5 pack of cards!', mint_five_pack_of_cards_edition_path(@edition), class: "btn btn-danger btn-sm", data: { confirm: "Are you sure? This will permanently mint five card in this edition on the Ethereum blockchain, assigned to owner address: #{ETHEREUM_CONTRACT.key.address}" }, method: :put %>
+    <% else %>
       <%= link_to 'Edit', edit_edition_path(@edition), class: "btn btn-outline-primary btn-sm" %>
       <%= link_to 'Back', editions_path, class: "btn btn-outline-primary btn-sm" %>
       <%= link_to 'Generate cards from players', players_path(edition_id: @edition.id), class: "btn btn-primary btn-sm" %>
       <%= link_to 'Remove all edition cards', remove_all_cards_edition_path(@edition), class: "btn btn-danger btn-sm", data: { confirm: 'Are you sure? This will remove all existing cards in this edition' }, method: :delete %>
+      <%= link_to 'Mint !', mint_edition_path(@edition), class: "btn btn-danger btn-sm", data: { confirm: "Are you sure? This will permanently mint this edition on the Ethereum blockchain." }, method: :put %>
     <% end %>
   </div>
 </div>

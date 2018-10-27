@@ -16,6 +16,8 @@ Rails.application.routes.draw do
       member do
         post :create_cards
         delete :remove_all_cards
+        put :mint
+        put :mint_five_pack_of_cards
       end
     end
     root to: 'players#index'

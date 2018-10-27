@@ -57,9 +57,20 @@ class EditionsController < ApplicationController
       flash[:error] = 'Edition cannot be minted because it is published or minted on the blockchain!'
       redirect_to @edition
     else
-      res = ETHEREUM_CONTRACT.transact_and_wait.mint_edition(@edition.name, @edition.cards.count)
-      flash[:notice] = 'Edition was successfully minted on the blockchain!'
-      @edition.update_attributes(number: )
+      begin
+        res = ETHEREUM_CONTRACT.transact_and_wait.mint_edition(@edition.name, @edition.cards.count)
+        success = res.mined
+        msg = nil
+      rescue Exception => e
+        success = false
+        msg = e.inspect
+      end
+      if success
+        flash[:notice] = "Edition was successfully minted on the blockchain!"
+        @edition.update_attributes(number: (ETHEREUM_CONTRACT.call.number_of_editions() - 1), is_published: true)
+      else
+        flash[:error] = "Could not mint edition on the blockchain! #{e}"
+      end
       redirect_to @edition
     end
 
