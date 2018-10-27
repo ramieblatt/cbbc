@@ -1,7 +1,7 @@
 class EditionsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin
-  before_action :set_edition, only: [:show, :edit, :update, :destroy, :create_cards, :remove_all_cards]
+  before_action :set_edition, only: [:show, :edit, :update, :mint, :destroy, :create_cards, :remove_all_cards]
 
   # GET /editions
   # GET /editions.json
@@ -17,7 +17,6 @@ class EditionsController < ApplicationController
   # GET /editions/new
   def new
     @edition = Edition.new
-    @edition.number = Edition.next_edition_number
   end
 
   # GET /editions/1/edit
@@ -28,7 +27,6 @@ class EditionsController < ApplicationController
   # POST /editions.json
   def create
     @edition = Edition.new(edition_params)
-    @edition.number = Edition.next_edition_number
     respond_to do |format|
       if @edition.save
         format.html { redirect_to @edition, notice: 'Edition was successfully created.' }
@@ -54,13 +52,29 @@ class EditionsController < ApplicationController
     end
   end
 
+  def mint
+    if @edition.is_published? or (@edition.number.present? and ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number))
+      flash[:error] = 'Edition cannot be minted because it is published or minted on the blockchain!'
+      redirect_to @edition
+    else
+      res = ETHEREUM_CONTRACT.transact_and_wait.mint_edition(@edition.name, @edition.cards.count)
+      flash[:notice] = 'Edition was successfully minted on the blockchain!'
+      @edition.update_attributes(number: )
+      redirect_to @edition
+    end
+
+  end
+
   # DELETE /editions/1
-  # DELETE /editions/1.json
   def destroy
-    @edition.destroy
-    respond_to do |format|
-      format.html { redirect_to edition_url, notice: 'Edition was successfully destroyed.' }
-      format.json { head :no_content }
+    if @edition.is_published? or ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number)
+      flash[:error] = 'Edition cannot be deleted because it is published or minted on the blockchain!'
+      redirect_to @edition
+    else
+      @edition.destroy
+      respond_to do |format|
+        format.html { redirect_to editions_url, notice: 'Edition was successfully destroyed.' }
+      end
     end
   end
 
@@ -83,7 +97,7 @@ class EditionsController < ApplicationController
   end
 
   def remove_all_cards
-    if @edition.is_published != true and res = @edition.remove_all_cards!
+    if (@edition.is_published != true  or ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number)) and res = @edition.remove_all_cards!
       redirect_to players_url, notice: "Edition card set was successfully destroyed."
     else
       redirect_to @edition, notice: "Edition card set could not be destroyed."
