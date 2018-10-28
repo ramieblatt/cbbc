@@ -1,10 +1,8 @@
-<%= render partial: '/shared/alerts' %>
-
 <div class="card border-primary mb-12" style="max-width: 2000rem;">
   <div class="card-header">Edition <%= @edition.number %>, Name:<%= @edition.name %></div>
   <div class="card-body">
     <% if @edition.is_published? %>
-      <%= link_to 'Mint 5 pack of cards!', mint_five_pack_of_cards_edition_path(@edition), class: "btn btn-danger btn-sm", data: { confirm: "Are you sure? This will permanently mint five card in this edition on the Ethereum blockchain, assigned to owner address: #{ETHEREUM_CONTRACT.key.address}" }, method: :put %>
+      <%= link_to 'Mint 5 pack of cards!', mint_five_pack_of_cards_edition_path(@edition), class: "btn btn-danger btn-sm", data: { confirm: "Are you sure? This will permanently mint five card in this edition on the Ethereum blockchain, assigned to card owner address: #{Rails.application.secrets.card_owner_address}" }, method: :put %>
     <% else %>
       <%= link_to 'Edit', edit_edition_path(@edition), class: "btn btn-outline-primary btn-sm" %>
       <%= link_to 'Back', editions_path, class: "btn btn-outline-primary btn-sm" %>
@@ -16,5 +14,5 @@
 </div>
 <br/>
 <div class="cards">
-  <%= render partial: 'cards/cards', locals: { cards: @edition.cards.order("cards.total_cards_in_series ASC, cards.player_id DESC, id ASC").page(params[:page])} %>
+  <%= render partial: 'cards/cards', locals: { cards: @edition.cards.order("cards.token_id DESC NULLS LAST, cards.total_cards_in_series ASC, cards.player_id DESC, id ASC").page(params[:page])} %>
 </div>

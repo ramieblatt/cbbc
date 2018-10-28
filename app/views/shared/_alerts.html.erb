@@ -1,6 +1,20 @@
-<% if notice %>
+<% if notice ||= flash[:notice] %>
   <div id="notice" class="alert alert-dismissible alert-success">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
     <%= notice %>
+  </div>
+<% end %>
+
+<% if warning ||= flash[:warning] %>
+  <div id="warning" class="alert alert-dismissible alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <%= warning %>
+  </div>
+<% end %>
+
+<% if error ||= flash[:error] %>
+  <div id="error" class="alert alert-dismissible alert-danger">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <%= error %>
   </div>
 <% end %>

@@ -143,4 +143,51 @@ class Edition < ApplicationRecord
     end
   end
 
+  def mint
+    success = nil
+    message = nil
+    begin
+      res = ETHEREUM_CONTRACT.transact_and_wait.mint_edition(@edition.name, @edition.cards.count)
+      success = res.mined
+      if success
+        success = self.update_attributes(number: (ETHEREUM_CONTRACT.call.number_of_editions() - 1), is_published: true)
+        unless success
+          message = self.errors.full_messages.join(', ')
+        end
+      end
+    rescue Exception => e
+      success = false
+      message = e.inspect
+    end
+    return {success: success, message: message}
+  end
+
+  def mint_five_pack_of_cards
+    success = nil
+    message = nil
+    begin
+      cards_to_mint = self.get_five_random_unminted_cards
+      res = ETHEREUM_CONTRACT.transact_and_wait.mint_five_pack(cards_to_mint.map{|c| c.player.lahman_bbref_id}, cards_to_mint.map{|c| c.card_type}, self.number, Rails.application.secrets.card_owner_address)
+      success = res.mined
+      if success
+        token_id_base = ETHEREUM_CONTRACT.call.number_of_cards() - 5
+        message = "Cards minted: "
+        message_per_card = []
+        cards_to_mint.each_with_index do |card, i|
+          card.update_column(:token_id, token_id_base + i)
+          message_per_card << "#{card.player.lahman_bbref_id} (#{card.card_type})"
+        end
+        message += message_per_card.join(', ')
+      end
+    rescue Exception => e
+      success = false
+      message = e.inspect
+    end
+    return {success: success, message: message}
+  end
+
+  def get_five_random_unminted_cards
+    self.cards.where("cards.token_id IS NULL").order("random()").limit(5)
+  end
+
 end

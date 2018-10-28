@@ -9,7 +9,7 @@ class Player < ApplicationRecord
   has_many :cards, inverse_of: :player
   has_many :player_images, inverse_of: :player
   include ActiveModel::Serialization
-  paginates_per 20
+  paginates_per 100
   DATABASE_EDITION_YEAR = "2016"
   PREBUILT_QUERIES = [
     "with_career_num_ab_greater_than",

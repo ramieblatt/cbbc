@@ -1,7 +1,7 @@
 class EditionsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin
-  before_action :set_edition, only: [:show, :edit, :update, :mint, :destroy, :create_cards, :remove_all_cards]
+  before_action :set_edition, only: [:show, :edit, :update, :mint, :destroy, :create_cards, :remove_all_cards, :mint, :mint_five_pack_of_cards]
 
   # GET /editions
   # GET /editions.json
@@ -54,22 +54,28 @@ class EditionsController < ApplicationController
 
   def mint
     if @edition.is_published? or (@edition.number.present? and ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number))
-      flash[:error] = 'Edition cannot be minted because it is published or minted on the blockchain!'
-      redirect_to @edition
+      redirect_to @edition, error: 'Edition cannot be minted because it is published or minted on the blockchain!'
     else
-      begin
-        res = ETHEREUM_CONTRACT.transact_and_wait.mint_edition(@edition.name, @edition.cards.count)
-        success = res.mined
-        msg = nil
-      rescue Exception => e
-        success = false
-        msg = e.inspect
-      end
-      if success
-        flash[:notice] = "Edition was successfully minted on the blockchain!"
-        @edition.update_attributes(number: (ETHEREUM_CONTRACT.call.number_of_editions() - 1), is_published: true)
+      res = @edition.mint
+      if res[:success]
+        flash[:notice] = "Edition was successfully minted on the blockchain! #{res[:message]}"
       else
-        flash[:error] = "Could not mint edition on the blockchain! #{e}"
+        flash[:error] = "Could not mint edition on the blockchain! #{res[:message]}"
+      end
+      redirect_to @edition
+    end
+
+  end
+
+  def mint_five_pack_of_cards
+    unless (@edition.is_published? and @edition.number.present? and ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number))
+      redirect_to @edition, error: 'Five pack of cards cannot be minted because edition is not published and minted on the blockchain!'
+    else
+      res = @edition.mint_five_pack_of_cards
+      if res[:success]
+        flash[:notice] = "Five pack of cards was successfully minted on the blockchain! #{res[:message]}"
+      else
+        flash[:error] = "Could not mint five pack of cards on the blockchain! #{res[:message]}"
       end
       redirect_to @edition
     end
@@ -79,8 +85,7 @@ class EditionsController < ApplicationController
   # DELETE /editions/1
   def destroy
     if @edition.is_published? or ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number)
-      flash[:error] = 'Edition cannot be deleted because it is published or minted on the blockchain!'
-      redirect_to @edition
+      redirect_to @edition, error: 'Edition cannot be deleted because it is published or minted on the blockchain!'
     else
       @edition.destroy
       respond_to do |format|
@@ -93,7 +98,7 @@ class EditionsController < ApplicationController
     if res = @edition.create_cards({total_cards: 1000})
       redirect_to @edition, notice: "Edition card set of #{res} was successfully created."
     else
-      redirect_to @edition, notice: "Edition card set could not be created."
+      redirect_to @edition, error: "Edition card set could not be created."
     end
   end
 
@@ -103,15 +108,15 @@ class EditionsController < ApplicationController
     if res = @edition.create_cards_from_players(params[:edition])
       redirect_to ("#{@return_path || @edition}?edition_id=#{@edition.id}"), notice: "Edition card set of #{res} was successfully created."
     else
-      redirect_to @edition, notice: "Edition card set could not be created."
+      redirect_to @edition, error: "Edition card set could not be created."
     end
   end
 
   def remove_all_cards
-    if (@edition.is_published != true  or ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number)) and res = @edition.remove_all_cards!
+    if (@edition.is_published != true or ETHEREUM_CONTRACT.call.check_edition_exists(@edition.number)) and @edition.remove_all_cards!
       redirect_to players_url, notice: "Edition card set was successfully destroyed."
     else
-      redirect_to @edition, notice: "Edition card set could not be destroyed."
+      redirect_to @edition, error: "Edition card set could not be destroyed."
     end
   end
 
