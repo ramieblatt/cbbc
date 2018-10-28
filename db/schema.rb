@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181024233639) do
+ActiveRecord::Schema.define(version: 20181028190726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 20181024233639) do
     t.datetime "updated_at", null: false
     t.string "card_type", default: "player", null: false
     t.integer "token_id"
+    t.boolean "is_minted", default: false, null: false
     t.index ["edition_id"], name: "index_cards_on_edition_id"
     t.index ["minted_at"], name: "index_cards_on_minted_at"
     t.index ["player_id"], name: "index_cards_on_player_id"

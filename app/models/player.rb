@@ -20,7 +20,6 @@ class Player < ApplicationRecord
     "managers_with_career_w_greater_than"
   ]
 
-  scope :active_is, -> (active_flag) { where(active: ActiveModel::Type::Boolean.new.cast(active_flag)) }
   scope :active, -> { where(active: true) }
   scope :non_active, -> { where(active: false) }
   scope :pitchers, -> { where(is_pitcher: true) }
